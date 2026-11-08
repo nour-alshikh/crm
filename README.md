@@ -35,6 +35,10 @@ Starting a new project from this template? See [SETUP.md](./SETUP.md).
 - [Theming](./docs/theming.md) — dark/light mode via `next-themes`, and
   keeping new components dark-mode-compatible for free via design tokens.
 
+- [Deployment](./docs/deployment.md) — deploying backend and frontend
+  separately, including the `BACKEND_URL` proxy mode for hosts like
+  `*.vercel.app` that share no domain with the API.
+
 ## Quick start
 
 ```bash

@@ -17,6 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Needed when requests arrive through a proxy (e.g. the Vercel frontend
+        // rewriting /api to this backend) so $request->ip() — and therefore
+        // per-IP rate limiting — sees the real client, not the proxy.
+        if ($trustedProxies = env('TRUSTED_PROXIES')) {
+            $middleware->trustProxies(at: $trustedProxies === '*' ? '*' : explode(',', $trustedProxies));
+        }
+
         $middleware->statefulApi();
         $middleware->throttleApi();
         $middleware->append(\App\Http\Middleware\SetLocale::class);
