@@ -1,4 +1,4 @@
-# Template
+# CRM
 
 A decoupled app: a Laravel API (`backend/`) and a Next.js SPA (`frontend/`).
 

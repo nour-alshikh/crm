@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Your App",
-  description: "TODO: replace with a real description",
+  title: "CRM",
+  description: "Customer relationship management",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
