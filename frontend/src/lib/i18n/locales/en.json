@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Your App"
+  },
+  "nav": {
+    "login": "Log in",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "manageUsers": "Manage users",
+    "logout": "Log out",
+    "theme": "Toggle theme",
+    "language": "Language"
+  },
+  "posts": {
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "statusDescription": {
+      "draft": "Only visible to you.",
+      "published": "Visible to everyone."
+    },
+    "category": {
+      "general": "General",
+      "tutorial": "Tutorial",
+      "news": "News",
+      "opinion": "Opinion"
+    },
+    "tag": {
+      "laravel": "Laravel",
+      "nextjs": "Next.js",
+      "typescript": "TypeScript",
+      "react": "React",
+      "php": "PHP",
+      "testing": "Testing"
+    },
+    "newHeading": "New post",
+    "editHeading": "Edit post",
+    "listHeading": "Posts",
+    "loading": "Loading posts…",
+    "empty": "No posts yet.",
+    "columns": {
+      "title": "Title",
+      "status": "Status",
+      "category": "Category",
+      "author": "Author"
+    },
+    "featured": "★ featured",
+    "edit": "Edit",
+    "delete": "Delete",
+    "created": "Post created.",
+    "updated": "Post updated.",
+    "deleted": "Post deleted.",
+    "loadError": "Failed to load posts.",
+    "deleteError": "Failed to delete post.",
+    "form": {
+      "title": "Title",
+      "content": "Content",
+      "status": "Status",
+      "category": "Category",
+      "tags": "Tags",
+      "featured": "Featured post",
+      "featuredDescription": "Shown in the featured section on the homepage.",
+      "readingMinutes": "Reading time (minutes)",
+      "priority": "Priority",
+      "publishDate": "Publish date",
+      "save": "Save changes",
+      "create": "Create post",
+      "saving": "Saving…",
+      "cancel": "Cancel"
+    }
+  },
+  "translatable": {
+    "missing": "Missing {locale} translation"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "تطبيقك"
+  },
+  "nav": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "dashboard": "لوحة التحكم",
+    "manageUsers": "إدارة المستخدمين",
+    "logout": "تسجيل الخروج",
+    "theme": "تبديل المظهر",
+    "language": "اللغة"
+  },
+  "posts": {
+    "status": {
+      "draft": "مسودة",
+      "published": "منشور"
+    },
+    "statusDescription": {
+      "draft": "مرئي لك فقط.",
+      "published": "مرئي للجميع."
+    },
+    "category": {
+      "general": "عام",
+      "tutorial": "شرح",
+      "news": "أخبار",
+      "opinion": "رأي"
+    },
+    "tag": {
+      "laravel": "Laravel",
+      "nextjs": "Next.js",
+      "typescript": "TypeScript",
+      "react": "React",
+      "php": "PHP",
+      "testing": "اختبار"
+    },
+    "newHeading": "منشور جديد",
+    "editHeading": "تعديل المنشور",
+    "listHeading": "المنشورات",
+    "loading": "جارٍ تحميل المنشورات…",
+    "empty": "لا توجد منشورات بعد.",
+    "columns": {
+      "title": "العنوان",
+      "status": "الحالة",
+      "category": "التصنيف",
+      "author": "الكاتب"
+    },
+    "featured": "★ مميز",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "created": "تم إنشاء المنشور.",
+    "updated": "تم تحديث المنشور.",
+    "deleted": "تم حذف المنشور.",
+    "loadError": "فشل تحميل المنشورات.",
+    "deleteError": "فشل حذف المنشور.",
+    "form": {
+      "title": "العنوان",
+      "content": "المحتوى",
+      "status": "الحالة",
+      "category": "التصنيف",
+      "tags": "الوسوم",
+      "featured": "منشور مميز",
+      "featuredDescription": "يظهر في قسم المميز على الصفحة الرئيسية.",
+      "readingMinutes": "مدة القراءة (بالدقائق)",
+      "priority": "الأولوية",
+      "publishDate": "تاريخ النشر",
+      "save": "حفظ التغييرات",
+      "create": "إنشاء منشور",
+      "saving": "جارٍ الحفظ…",
+      "cancel": "إلغاء"
+    }
+  },
+  "translatable": {
+    "missing": "ترجمة {locale} مفقودة"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن"
+  }
+}
