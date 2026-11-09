@@ -152,6 +152,14 @@
   }
 }
 
+/* Theme toggle reveal (see ThemeToggle): replace the default cross-fade with
+   the circular clip-path animation driven from JS. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
