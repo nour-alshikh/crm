@@ -1,0 +1,34 @@
+# Decisions log (ADR-lite)
+
+Format: **Decision** · Rejected alternative · Why. Add new entries at the bottom; never edit a decided one — supersede it.
+
+Versions checked against package registries on **2026-11-09**: laravel/framework 13.40, PHP ^8.3, Sanctum 4.x, laravel/reverb 1.12, laravel/horizon 5.50, dedoc/scramble 0.13.x, spatie/laravel-permission 8.5, spatie/laravel-activitylog 5.1, maatwebsite/excel 4.0, propaganistas/laravel-phone 6.1, pestphp/pest 5.3, larastan 3.14, spatie/laravel-backup 10.4, mpdf 8.3; next 16.4, next-intl 4.14, @tanstack/react-query 5.107, @tanstack/react-table 9.3, @dnd-kit/core 6.3, recharts 3.10, laravel-echo 2.6, pusher-js 8.6, openapi-typescript 7.13, openapi-fetch 0.17, expo SDK 58, @playwright/test 1.65. **Re-verify each at install time** and pin exact versions in lockfiles.
+
+| # | Decision | Rejected | Why |
+|---|---|---|---|
+| 001 | **Monorepo**, evolve existing template; folders `backend/`, `frontend/`, `mobile/` (Phase 6), `docs/` | Separate repos; fresh scaffold; renaming `frontend/`→`web/` | Solo dev: one PR covers API + UI + docs; template already has working auth/proxy/theming; rename is churn |
+| 002 | **MySQL 8.4 LTS** | PostgreSQL | Forge/Sail default, most Laravel examples; 30 users → no PG-only feature needed. Dedupe via indexed normalized columns, not JSON |
+| 003 | **Sanctum SPA cookie auth via Next.js rewrites (same-origin)** for web; **Sanctum personal access tokens** for mobile | Next.js BFF holding a token in httpOnly cookie; direct cross-subdomain cookies | Rewrites make the browser see one origin → no CORS, no third-party cookie issues, CSRF via XSRF-TOKEN still works; already built & documented (`docs/deployment.md`). BFF duplicates session handling. Cross-subdomain works too but rewrite mode also covers Vercel previews |
+| 004 | Visibility via **one `VisibleTo` query scope + policies**, driven by permissions `*.view_all` / `*.view_team` / `*.view_own` / `customers.view` | Role checks in controllers; global scopes | Explicit scope call is greppable and testable; global scopes leak into jobs/imports and surprise you |
+| 005 | **Scramble** → OpenAPI 3.1 → `openapi-typescript` + `openapi-fetch` | spatie TS-transformer (current); Scribe | Scramble infers from FormRequests + Resources with no annotations; one spec serves web, mobile and docs UI (`/docs/api`). Scribe needs docblocks |
+| 006 | Response envelope: success `{ data, meta?, links? }` (Laravel Resource default); error `{ message, code, errors? }` | Custom `{success:true,...}` wrapper | Laravel-native, Scramble understands it, paginators already produce `meta/links` |
+| 007 | Money as **BIGINT minor units + `currency` CHAR(3)** | DECIMAL(15,2) | No float drift in JS (`number` safe to 9e15), exact sums; currencies with 3 decimals handled by currency exponent table |
+| 008 | **next-intl** with `[locale]` segment, `localePrefix: "always"`, server-rendered `dir`/`lang` | Keep custom context | SSR dir (no RTL flash), typed messages, ICU plurals (Arabic has 6 plural forms) |
+| 009 | Contact/Company visibility = `assigned_to` owner OR owns ≥1 deal on it OR team rule; Support sees `is_customer = true` | Strict `assigned_to` only | Accounts are touched by several reps; strict owner-only hides needed context |
+| 010 | **Redis + Horizon**, queues `webhooks`, `default`, `imports`, `mail`, `notifications` | database queue | Brief requirement; Horizon gives retries/visibility; separate queues keep a big import from delaying webhooks |
+| 011 | Western digits in both locales | Arabic-Indic in AR | Phone numbers, money and IDs are copied to other systems; common in Gulf B2B software. Toggleable later |
+| 012 | Stage/tag colors stored as **palette keys** (`teal`, `rose`…) | Hex from a color picker | Theme-aware, contrast-safe, consistent (see `09-design-system.md`) |
+| 013 | **spatie/laravel-medialibrary** for attachments (already installed) | plain Storage | Conversions, per-model collections, already wired for avatars |
+| 014 | **Postmark** for outbound + inbound webhooks | IMAP polling; Mailgun/SES | Inbound JSON webhook gives parsed headers (`Message-ID`, `In-Reply-To`); IMAP polling is fragile. Swap-able via Laravel mail driver + `InboundEmailParser` interface |
+| 015 | **Forge + one VPS** (4 vCPU / 8 GB) for API, workers, Reverb, Next.js (`next start` via PM2/supervisor) ; separate small VPS for staging | Vercel for Next | Same VPS = same-site cookies, one deploy pipeline, cheaper. Vercel remains possible thanks to rewrite proxy |
+| 016 | **Reverb** websockets, private channels per user/team, Echo on client | Pusher SaaS; polling | Brief; self-hosted, no per-message cost |
+| 017 | **mPDF** for quote PDFs | dompdf; Browsershot | mPDF shapes Arabic and handles RTL natively, no Chromium on server |
+| 018 | Auto-increment BIGINT ids in API; plus `ulid` column on externally referenced rows (webhook-facing, public form) | UUID PKs everywhere | Simpler joins/indexes; ULIDs only where ids must be unguessable |
+| 019 | **Pest 5** (convert existing PHPUnit example tests) + Larastan level 6 → 8 + Pint | PHPUnit only | Brief |
+| 020 | spatie/laravel-activitylog for audit (table `activity_log`); CRM timeline uses own `activities` table | One table for both | Audit = technical diff history; timeline = business events shown to users. Different retention and shape |
+| 021 | Dedupe on **`phone_e164`** and **`email_normalized`** (lowercased, gmail dots/plus stripped) indexed columns on leads & contacts; flag + link, never auto-merge | Fuzzy name matching; auto-merge | Deterministic and explainable; merge is a manual action (Phase 5) |
+| 022 | Custom fields: `custom_fields` definitions + `custom_field_values` with typed columns (`value_text`, `value_number`, `value_date`, `value_bool`, `value_json`) | JSON column on each entity | Filterable/sortable with indexes; validation per type |
+| 023 | **@dnd-kit/core + @dnd-kit/sortable 6.x** for Kanban | @dnd-kit/react 0.x | 0.x is pre-1.0; 6.x is stable and has keyboard sensor |
+| 024 | Phone normalization: **propaganistas/laravel-phone** (wraps libphonenumber-for-php) with company default region | raw libphonenumber | Validation rule + cast included |
+| 025 | Optimistic locking on deals (`lock_version`) for Kanban moves | Last write wins | Two reps dragging same card; return 409 and refetch |
+| 026 | Round-robin pointer stored per team in `assignment_rules` with `SELECT … FOR UPDATE` | Random assignment | Fair, deterministic, race-free under concurrent webhooks |

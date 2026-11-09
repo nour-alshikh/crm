@@ -4,7 +4,23 @@ A decoupled app: a Laravel API (`backend/`) and a Next.js SPA (`frontend/`).
 
 Starting a new project from this template? See [SETUP.md](./SETUP.md).
 
-## Docs
+## Project plan
+
+Start with [docs/PLAN.md](./docs/PLAN.md) (master step-by-step plan) and
+[CLAUDE.md](./CLAUDE.md) (project rules). Plan docs:
+[00 Overview](./docs/00-overview.md) ·
+[01 Architecture](./docs/01-architecture.md) ·
+[02 Database](./docs/02-database.md) ·
+[03 API](./docs/03-api.md) ·
+[04 Frontend](./docs/04-frontend.md) ·
+[05 Integrations](./docs/05-integrations.md) ·
+[06 Security](./docs/06-security.md) ·
+[07 Testing](./docs/07-testing.md) ·
+[08 Deployment](./docs/08-deployment.md) ·
+[09 Design system](./docs/09-design-system.md) ·
+[Decisions](./docs/DECISIONS.md) · [Risks](./docs/RISKS.md)
+
+## Template docs (how the existing foundation works)
 
 - [Authentication](./docs/authentication.md) — cookie-based SPA auth via Laravel
   Sanctum, how the frontend and backend talk to each other, running locally.
