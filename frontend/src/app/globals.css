@@ -117,12 +117,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* No theme toggle exists in this app, so follow the OS preference the same
-   way this project did before shadcn's init switched to a class-based
-   `.dark` toggle (which needs JS to ever apply). Mirrors `.dark` above —
-   keep both in sync if either changes. */
+/* Pre-hydration / no-JS fallback: follow the OS preference until
+   next-themes applies its class. Skipped when the user explicitly picked
+   light (next-themes sets `.light` on <html>) — otherwise OS dark mode
+   would override the toggle. Mirrors `.dark` above — keep both in sync. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);

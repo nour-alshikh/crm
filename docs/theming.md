@@ -27,10 +27,10 @@ the `.dark` class it also defines. This adds the toggle.
   `mounted` boolean so the very first client render doesn't flash one icon
   then immediately swap to the other.
 - `globals.css` already had both the `.dark` class block and the
-  `@media (prefers-color-scheme: dark)` block, kept in sync — the comment
-  there calling out that duplication predates this change and still
-  applies verbatim; the media-query block is now the pre-hydration/no-JS
-  fallback rather than the only mechanism.
+  `@media (prefers-color-scheme: dark)` block, kept in sync. The media-query
+  block is the pre-hydration/no-JS fallback and targets `:root:not(.light)`
+  — without that guard, OS dark mode would override an explicit "light"
+  choice from the toggle.
 
 ## Adding dark-mode support to a new component
 
