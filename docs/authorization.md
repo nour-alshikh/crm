@@ -29,13 +29,13 @@ endpoint.
 - `database/seeders/RolePermissionSeeder.php` — seeds a baseline `admin` / `user`
   role setup: `admin` gets a `manage-users` permission, `user` gets nothing extra.
   Called from `DatabaseSeeder`.
-- `app/Http/Controllers/Auth/AuthController.php` — new users are assigned the
-  `user` role on registration (`register()`); `formatUser()` includes `roles` and
-  `permissions` in every auth response (register/login/`/api/user`) so the frontend
-  doesn't need a second round trip.
+- `app/Http/Resources/UserResource.php`: includes `roles` and flattened
+  `permissions` in every auth response (login and `/api/v1/user`) so the frontend
+  doesn't need a second round trip. There is no self-registration; admins create
+  users.
 - `app/Http/Controllers/Admin/UserController.php` — example endpoint gated by
   `permission:manage-users`.
-- `routes/api.php` — `/api/admin/users` wrapped in
+- `routes/api.php` — `/api/v1/admin/users` wrapped in
   `Route::middleware('permission:manage-users')`.
 
 ### Adding a new role or permission

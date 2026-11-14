@@ -1,6 +1,6 @@
 # 03 — API
 
-Base: `/api/v1` (web through Next rewrite at same origin; mobile direct to `api.crm.<co>`). Webhooks: `/webhooks/*`. OpenAPI: `GET /docs/api.json` (Scramble), UI at `/docs/api` (local/staging only, admin in prod).
+Base: `/api/v1` (web through Next rewrite at same origin; mobile direct to `api.crm.<co>`). Webhooks: `/webhooks/*`. OpenAPI: `GET /docs/api.json` (Scramble), UI at `/docs/api` (local/staging only, admin in prod). The committed spec is `backend/openapi.json` (`composer api:spec`); the frontend generates `src/lib/api/schema.d.ts` from it (`npm run api:types`). CI fails if either drifts.
 
 ## Conventions
 
@@ -11,7 +11,7 @@ Base: `/api/v1` (web through Next rewrite at same origin; mobile direct to `api.
   ```json
   { "message": "The given data was invalid.", "code": "validation_failed", "errors": { "email": ["…"] } }
   ```
-  `code` values: `unauthenticated` 401, `forbidden` 403, `not_found` 404, `validation_failed` 422, `conflict` 409 (stale `lock_version`, duplicate), `rate_limited` 429, `domain_error` 422 (business rule, e.g. "lost reason required"), `server_error` 500. Messages translated.
+  `code` values: `unauthenticated` 401, `forbidden` 403, `not_found` 404, `method_not_allowed` 405, `validation_failed` 422, `conflict` 409 (stale `lock_version`, duplicate), `csrf_mismatch` 419, `rate_limited` 429, `domain_error` 422 (business rule, e.g. "lost reason required"; throw an `App\Exceptions\DomainException` subclass), `http_error` (other 4xx), `server_error` 500. Messages translated (`lang/{en,ar}/errors.php`). Details: `docs/api-error-handling.md`.
 - **Pagination:** `?page=1&per_page=25` (max 100). Kanban + mobile infinite lists: `?cursor=` (cursor pagination) on `/deals/board` and `/conversations`, `/activities`.
 - **Filtering:** `filter[status]=new,contacted&filter[assigned_to]=me|12&filter[source]=facebook&filter[created_between]=2026-01-01,2026-01-31&filter[q]=ahmad&filter[tag]=vip&filter[cf.industry]=bank` — implemented with **spatie/laravel-query-builder** (allowed filters/sorts whitelisted per controller).
 - **Sorting:** `?sort=-created_at,name`.

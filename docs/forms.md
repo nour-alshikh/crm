@@ -2,8 +2,8 @@
 
 Replaces manual `useState` per field (and a separate `errors: Record<string,
 string[]>` state for server-side validation) with `react-hook-form` +
-`zodResolver`, across the four auth forms: login, register, forgot-password,
-reset-password.
+`zodResolver`, across the auth forms: login, forgot-password, reset-password (registration
+was removed in step 0.7: admins create users).
 
 ## Why
 
@@ -16,8 +16,8 @@ reimplemented per page.
 ## How it works
 
 - `src/lib/schemas.ts` — one zod schema per form (`loginSchema`,
-  `registerSchema`, `forgotPasswordSchema`, `resetPasswordFormSchema`). The
-  payload types (`LoginPayload`, `RegisterPayload`, etc.) are `z.infer`'d from
+  `forgotPasswordSchema`, `resetPasswordFormSchema`). The
+  payload types (`LoginPayload`, etc.) are `z.infer`'d from
   the schemas instead of being hand-written interfaces — one definition, not
   two that can drift apart. `types/auth.ts` now only holds `User` (an API
   response shape, not a form input).
@@ -83,7 +83,7 @@ const form = useForm<ThingPayload>({ resolver: zodResolver(thingSchema) });
 
 async function onSubmit(values: ThingPayload) {
   try {
-    await apiFetch("/api/thing", { method: "POST", body: JSON.stringify(values) });
+    await api.POST("/things", { body: values });
   } catch (err) {
     const message = applyServerErrors(form, err, ["name"]);
     if (message) form.setError("root", { message });
