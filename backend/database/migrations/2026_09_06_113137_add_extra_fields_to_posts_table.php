@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\PostCategory;
 use App\Enums\PostStatus;
 use Illuminate\Database\Migrations\Migration;
