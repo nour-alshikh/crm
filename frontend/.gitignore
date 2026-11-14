@@ -44,3 +44,9 @@ next-env.d.ts
 # incremental-build cache for `php artisan typescript:transform` (backend);
 # src/types/generated.ts itself is committed
 src/types/typescript-transformer-manifest.json
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
