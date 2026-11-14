@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useI18n } from "@/contexts/i18n-context";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 import {
   CircleCheckIcon,
@@ -12,10 +13,14 @@ import {
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
+  const { dir } = useI18n();
 
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
+      // Toasts sit at bottom-END (design system §10): bottom-left in Arabic.
+      dir={dir}
+      position={dir === "rtl" ? "bottom-left" : "bottom-right"}
       className="toaster group"
       icons={{
         success: <CircleCheckIcon className="size-4" />,
@@ -30,6 +35,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
           "--border-radius": "var(--radius)",
+          boxShadow: "var(--shadow-sm)",
         } as React.CSSProperties
       }
       toastOptions={{
