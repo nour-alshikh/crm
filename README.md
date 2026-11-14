@@ -57,16 +57,21 @@ Start with [docs/PLAN.md](./docs/PLAN.md) (master step-by-step plan) and
 
 ## Quick start
 
+Requires Docker Desktop + Node. Full setup, ports and the no-Docker alternative
+are in [SETUP.md](./SETUP.md#local-development).
+
 ```bash
-# backend
+# backend (Docker/Sail: PHP 8.4, MySQL 8.4, Redis, Mailpit)
 cd backend
-php artisan migrate --seed
-php artisan serve --port=8000
+composer install && cp .env.example .env
+./sail up -d
+./sail artisan key:generate && ./sail artisan migrate --seed
 
 # frontend (separate terminal)
 cd frontend
+npm install && cp .env.example .env.local
 npm run dev
 ```
 
-Visit `http://localhost:3000/register` to create an account, or use the seeded
-`test@example.com` user (role `user`).
+API: http://localhost:8000 · App: http://localhost:3000 · Mailpit: http://localhost:8025.
+Log in with the seeded `test@example.com` user (password `password`).

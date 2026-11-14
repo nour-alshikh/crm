@@ -63,8 +63,8 @@ Phase 3 and Phase 4 are independent → order can swap if Meta approvals lag (re
 ### 0.1 Local Docker environment (Sail)
 - **Goal:** reproducible PHP 8.4 / MySQL 8.4 / Redis / Mailpit stack (local PHP 8.2 is too old for Laravel 13).
 - **Depends on:** — · ⛔ 0.2+
-- **Backend:** a) install Docker Desktop (WSL2 backend) + WSL Ubuntu; clone repo inside WSL filesystem for speed. b) `php artisan sail:install --with=mysql,redis,mailpit` (run via `docker run --rm -v $(pwd):/app composer` if needed); set PHP runtime 8.4 in `compose.yaml`. c) `.env.example` → MySQL/Redis/Mailpit defaults; `composer dev` script runs serve + queue + pail.
-- **Files:** `backend/compose.yaml`, `backend/.env.example`, `SETUP.md` (local section rewritten), `README.md` quick start.
+- **Backend:** a) install Docker Desktop (WSL2 backend; enable VT-x in BIOS + Virtual Machine Platform); repo stays on the Windows drive (ADR-027). b) `php artisan sail:install --with=mysql,redis,mailpit --php=8.4`; `backend/sail` wrapper because `vendor/bin/sail` rejects Git Bash. c) `.env.example` → MySQL/Redis/Mailpit defaults, ports 8000/3307 to coexist with XAMPP; `composer dev` (native: serve + queue + pail) and `composer workers` (under Sail: queue + pail).
+- **Files:** `backend/compose.yaml`, `backend/sail`, `backend/.env.example`, `backend/phpunit.xml` (MySQL `testing` DB), `backend/composer.json` scripts, `SETUP.md` (local section rewritten), `README.md` quick start.
 - **Commands:** `sail up -d`, `sail artisan migrate --seed`, `sail artisan test`.
 - **Tests:** existing example tests pass on MySQL.
 - **Acceptance:** fresh clone → `sail up -d && sail artisan migrate --seed` → `http://localhost:8000/up` 200; frontend logs in with seeded user against it; Mailpit UI on :8025 receives password-reset mail.
@@ -712,7 +712,7 @@ Calendar sync (Google/M365), click-to-call telephony, email open tracking, publi
 
 ### Phase 0 — Setup
 - [ ] 0.0 Company kickoff (Meta verification, WA number, domains, VPS, Q1–Q10)
-- [ ] 0.1 Local Docker environment (Sail)
+- [x] 0.1 Local Docker environment (Sail)
 - [ ] 0.2 Upgrade to Laravel 13 & current packages
 - [ ] 0.3 Backend quality tooling (Pest, Larastan, Pint, arch)
 - [ ] 0.4 Frontend tooling (Vitest, Playwright, lint)

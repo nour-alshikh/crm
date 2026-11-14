@@ -46,7 +46,11 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185\" \"php artisan serve --port=8000\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" --names=server,queue,logs --kill-others"
+        ],
+        "workers": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#c4b5fd,#fb7185\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" --names=queue,logs --kill-others"
         ],
         "test": [
             "@php artisan config:clear --ansi",
@@ -89,5 +93,9 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts-descriptions": {
+        "dev": "Native (no Docker): API server on :8000 + queue worker + log tail.",
+        "workers": "Under Sail (the container already serves HTTP): queue worker + log tail. Run: ./sail composer workers"
+    }
 }

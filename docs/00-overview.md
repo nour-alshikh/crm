@@ -57,7 +57,7 @@ telephony/VoIP, invoicing/payments, customer portal, AI scoring, calendar sync
 7. Support/Viewer sees **companies/contacts with ≥ 1 won deal** and their deals, read-only + notes.
 8. Email provider: **Postmark** (outbound + inbound webhook) unless the company already pays for another (ADR-014). → Q4
 9. Hosting: one VPS (Hetzner/DigitalOcean) managed by **Laravel Forge**, Next.js on the **same VPS** behind Nginx, subdomains `crm.<company>` (web) and `api.crm.<company>` (API), `ws.crm.<company>` (Reverb). (ADR-015)
-10. Developer machine is Windows; local PHP is 8.2 and Docker is not installed → step 0.1 installs Docker Desktop (WSL2) and uses Sail.
+10. Developer machine is Windows; local PHP is 8.2 (XAMPP) → step 0.1 installed Docker Desktop (WSL2) and uses Sail, with the repo on the Windows drive (ADR-027).
 
 ## Open questions (with proposed defaults)
 
@@ -122,4 +122,4 @@ telephony/VoIP, invoicing/payments, customer portal, AI scoring, calendar sync
 11. **WhatsApp outbound templates require Meta approval per template** — template sync, not authoring-only.
 12. **Missing:** GDPR-ish data export/delete, login throttling/2FA, user deactivation (vs delete), "away" status for round-robin, currency handling, attachments size limits, global search — all added to plan.
 13. **Arabic PDF** — dompdf breaks Arabic shaping; use **mPDF** (native Arabic/RTL) or Browsershot (Chromium). Chosen mPDF (ADR-017).
-14. **Local env** — PHP 8.2 installed, Laravel 13 needs 8.3; Docker not installed.
+14. **Local env** — PHP 8.2 installed, Laravel 13 needs 8.3 → resolved in 0.1: Docker/Sail with PHP 8.4 (ADR-027); native PHP ≥ 8.3 remains an option for a second machine (SETUP.md Option B).

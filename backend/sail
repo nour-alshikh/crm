@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Thin Sail entry point that also works from Git Bash on Windows.
+# vendor/bin/sail refuses MINGW ("Unsupported operating system"), so there we
+# map the common Sail commands onto `docker compose` ourselves. Everywhere else
+# (Linux, macOS, WSL) this just delegates to the real script.
+# Usage (from backend/): ./sail up -d | ./sail artisan migrate | ./sail test | ./sail shell
+set -euo pipefail
+cd "$(dirname "$0")"
+
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) ;;
+    *) exec ./vendor/bin/sail "$@" ;;
+esac
+
+APP_SERVICE="${APP_SERVICE:-laravel.test}"
+TTY=()
+[ -t 0 ] && [ -t 1 ] || TTY=(-T)
+exec_app() { MSYS_NO_PATHCONV=1 docker compose exec "${TTY[@]}" -u sail "$APP_SERVICE" "$@"; }
+
+if [ $# -eq 0 ]; then set -- ps; fi
+cmd="$1"; shift
+
+case "$cmd" in
+    artisan|art|a) exec_app php artisan "$@" ;;
+    test)          exec_app php artisan test "$@" ;;
+    composer)      exec_app composer "$@" ;;
+    php)           exec_app php "$@" ;;
+    tinker)        exec_app php artisan tinker "$@" ;;
+    shell|bash)    exec_app bash "$@" ;;
+    root-shell)    MSYS_NO_PATHCONV=1 docker compose exec "${TTY[@]}" "$APP_SERVICE" bash "$@" ;;
+    mysql)         MSYS_NO_PATHCONV=1 docker compose exec "${TTY[@]}" mysql bash -c 'MYSQL_PWD="$MYSQL_PASSWORD" mysql -u "$MYSQL_USER" "$MYSQL_DATABASE"' ;;
+    redis)         docker compose exec "${TTY[@]}" redis redis-cli "$@" ;;
+    *)             exec docker compose "$cmd" "$@" ;;  # up, down, ps, logs, build, restart…
+esac
