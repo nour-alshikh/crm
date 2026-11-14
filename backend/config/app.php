@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -53,6 +55,19 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Trusted Proxies
+    |--------------------------------------------------------------------------
+    |
+    | "*" or a comma-separated list of proxy IPs/CIDRs whose X-Forwarded-*
+    | headers are believed (see docs/deployment.md). Read per request by
+    | App\Http\Middleware\TrustProxies; null trusts no proxy.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
 
     /*
     |--------------------------------------------------------------------------
