@@ -51,7 +51,7 @@ describe("applyServerErrors", () => {
     });
 
     expect(message).toBe("This password reset token is invalid.");
-    expect(form.current.formState.errors.password?.message).toBe("Too short.");
+    expect(form.current.formState.errors.password?.message).toBe("DELIBERATELY WRONG");
     expect(form.current.formState.errors).not.toHaveProperty("email");
   });
 

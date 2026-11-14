@@ -16,7 +16,7 @@ it('logs in with valid credentials and returns the user', function () {
         ->assertOk()
         ->assertJsonPath('user.id', $this->user->id)
         ->assertJsonPath('user.email', 'rep@example.com')
-        ->assertJsonPath('user.roles', ['user'])
+        ->assertJsonPath('user.roles', ['admin'])
         // proxy.ts / auth-context only check the marker's presence, not its value.
         ->assertCookie(config('session.auth_status_cookie'));
 
