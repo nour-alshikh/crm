@@ -5,7 +5,7 @@ import { server } from "./src/test/msw-server";
 
 // MSW intercepts fetch for every test. Unhandled requests fail loudly so a
 // test never silently hits a real backend.
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+beforeAll(() => server.listen({ onUnhandledFrame: "error" })); // MSW 3 name (was onUnhandledRequest)
 
 afterEach(() => {
   server.resetHandlers();
