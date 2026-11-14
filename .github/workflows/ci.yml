@@ -95,7 +95,12 @@ jobs:
       # Fails when routes/requests/resources changed without re-exporting the
       # spec. Fix locally: ./sail composer api:spec && (cd ../frontend && npm run api:types)
       - name: OpenAPI spec is up to date
+        # Scramble reads the DB schema to type model attributes, so export
+        # against a migrated database, like the local `crm` one.
+        env:
+          DB_DATABASE: testing
         run: |
+          php artisan migrate:fresh --force --no-interaction
           php artisan scramble:export --path=openapi.json
           git diff --exit-code -- openapi.json
 
