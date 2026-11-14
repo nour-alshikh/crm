@@ -28,6 +28,11 @@ Authenticated request
 1. The frontend calls `GET /sanctum/csrf-cookie` once, which sets an `XSRF-TOKEN`
    cookie. Every non-GET request reads that cookie and sends it back as the
    `X-XSRF-TOKEN` header (handled in `frontend/src/lib/api.ts`).
+   Since Laravel 13 the check is done by `PreventRequestForgery` (configured in
+   `config/sanctum.php`). A request with `Sec-Fetch-Site: same-origin` (the
+   rewrite/proxy mode) passes on that header alone. Anything else, including
+   direct mode where `localhost:3000` → `:8000` counts as `same-site`, must
+   carry the token. Keep sending the token in both modes (ADR-028).
 2. `POST /api/register` / `POST /api/login` authenticate via a normal Laravel
    session, not a token. The session cookie (`app_session`) is what keeps
    the user logged in.

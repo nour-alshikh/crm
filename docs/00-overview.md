@@ -16,10 +16,10 @@ This repo is **not empty**. It is an evolved starter template (see root
 
 | Already present | Version | Plan action |
 |---|---|---|
-| Laravel API (`backend/`) | 12.x, PHP ^8.2 | Upgrade to **Laravel 13** (needs PHP 8.3) in step 0.2 |
+| Laravel API (`backend/`) | 12.x, PHP ^8.2 | ✅ Upgraded to **Laravel 13.42**, PHP ^8.3 (runs 8.4) in step 0.2 |
 | Sanctum SPA cookie auth + `auth_status` marker cookie | Sanctum 4 | Keep (ADR-003) |
 | JSON error envelope (`ApiExceptionRenderer`) | — | Keep, extend to full envelope (ADR-006) |
-| spatie/laravel-permission, medialibrary | 6.x / 11.x | Upgrade permission → 8.x |
+| spatie/laravel-permission, medialibrary | 6.x / 11.x | ✅ permission 8.5, medialibrary 11.23.13 (step 0.2) |
 | spatie/laravel-typescript-transformer | 3.x | **Replace** with Scramble OpenAPI (ADR-005) |
 | Next.js (`frontend/`) | 16.3, React 19.2, Tailwind 4, shadcn (Base UI) | Keep; bump to latest 16.x |
 | Custom i18n context (localStorage, client-side `dir`) | — | **Replace** with `next-intl` locale routing `/ar` `/en` (ADR-008) |
