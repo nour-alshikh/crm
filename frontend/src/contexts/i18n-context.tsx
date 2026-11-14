@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Locale } from "@/types/generated";
 import { apiFetch } from "@/lib/api";
 import { useAuth } from "@/contexts/auth-context";
@@ -38,7 +31,7 @@ function lookup(dictionary: Dictionary, key: string): string | undefined {
     .reduce<unknown>(
       (node, segment) =>
         node && typeof node === "object" ? (node as Record<string, unknown>)[segment] : undefined,
-      dictionary
+      dictionary,
     ) as string | undefined;
 }
 
@@ -75,7 +68,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         });
       }
     },
-    [user]
+    [user],
   );
 
   const t = useCallback(
@@ -87,15 +80,13 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
       return Object.entries(vars).reduce(
         (result, [name, value]) => result.replaceAll(`{${name}}`, String(value)),
-        template
+        template,
       );
     },
-    [locale]
+    [locale],
   );
 
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n(): I18nContextValue {

@@ -13,7 +13,7 @@ export function UserAvatar({ name, avatarUrl, alt, className }: UserAvatarProps)
     <span
       className={cn(
         "flex h-full w-full items-center justify-center overflow-hidden rounded-full border bg-muted text-sm",
-        className
+        className,
       )}
     >
       {avatarUrl ? (

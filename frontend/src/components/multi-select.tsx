@@ -31,9 +31,7 @@ export function MultiSelect({
   ...triggerProps
 }: MultiSelectProps) {
   function toggle(optionValue: string, checked: boolean) {
-    onValueChange(
-      checked ? [...value, optionValue] : value.filter((v) => v !== optionValue)
-    );
+    onValueChange(checked ? [...value, optionValue] : value.filter((v) => v !== optionValue));
   }
 
   const selectedLabels = options
@@ -44,15 +42,15 @@ export function MultiSelect({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 data-popup-open:border-ring aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30",
-          className
+          "flex w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-popup-open:border-ring dark:bg-input/30",
+          className,
         )}
         {...triggerProps}
       >
         <span
           className={cn(
             "truncate text-left",
-            selectedLabels.length === 0 && "text-muted-foreground"
+            selectedLabels.length === 0 && "text-muted-foreground",
           )}
         >
           {selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder}

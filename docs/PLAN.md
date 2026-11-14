@@ -715,7 +715,7 @@ Calendar sync (Google/M365), click-to-call telephony, email open tracking, publi
 - [x] 0.1 Local Docker environment (Sail)
 - [x] 0.2 Upgrade to Laravel 13 & current packages
 - [x] 0.3 Backend quality tooling (Pest, Larastan, Pint, arch)
-- [ ] 0.4 Frontend tooling (Vitest, Playwright, lint)
+- [x] 0.4 Frontend tooling (Vitest, Playwright, lint)
 - [ ] 0.5 Design system foundation (tokens, fonts, playground)
 - [ ] 0.6 CI (GitHub Actions)
 - [ ] 0.7 API v1, error envelope, Scramble + typed client

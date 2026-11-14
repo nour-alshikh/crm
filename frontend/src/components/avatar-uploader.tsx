@@ -28,7 +28,7 @@ export function AvatarUploader() {
       toast.error(
         err instanceof ApiError
           ? (err.errors?.avatar?.[0] ?? err.message)
-          : "Failed to upload avatar."
+          : "Failed to upload avatar.",
       );
     } finally {
       setIsUploading(false);
@@ -42,9 +42,7 @@ export function AvatarUploader() {
       await removeAvatar();
       toast.success("Avatar removed.");
     } catch (err) {
-      toast.error(
-        err instanceof ApiError ? err.message : "Failed to remove avatar."
-      );
+      toast.error(err instanceof ApiError ? err.message : "Failed to remove avatar.");
     } finally {
       setIsRemoving(false);
     }
@@ -55,11 +53,7 @@ export function AvatarUploader() {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="h-20 w-20">
-        <UserAvatar
-          name={user.name}
-          avatarUrl={user.avatar_url}
-          alt={`${user.name}'s avatar`}
-        />
+        <UserAvatar name={user.name} avatarUrl={user.avatar_url} alt={`${user.name}'s avatar`} />
       </div>
 
       <div className="flex gap-2">

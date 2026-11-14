@@ -90,6 +90,17 @@ cp .env.example .env.local
 npm run dev
 ```
 
+Frontend checks (all must pass before a PR): `npm run typecheck && npm run lint &&
+npm run format:check && npm run test && npm run build`. `npm run format` fixes
+formatting. E2E: first run `npx playwright install chromium`, then `npm run e2e`.
+It needs the Sail backend running and seeded, and reuses a running `npm run dev`.
+
+Windows notes: set the user env var `PLAYWRIGHT_BROWSERS_PATH=D:\ms-playwright`
+(or any non-system drive) before installing browsers, or they go to `C:`
+(~300 MB per browser). Always run unit tests via `npm run test`, not bare
+`npx vitest`: the launcher in `scripts/vitest.mjs` works around a drive-letter
+casing bug.
+
 `./sail` is a small wrapper at `backend/sail`. On Linux/macOS/WSL it calls
 `vendor/bin/sail`. In Git Bash on Windows, where the vendor script refuses to
 run, it calls `docker compose` instead. Before every PR: `./sail composer check` (Pint + Larastan + Pest; `./sail composer format`

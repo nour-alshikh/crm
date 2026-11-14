@@ -6,9 +6,6 @@ import { defaultLocale } from "./config";
  * the given locale, falling back to the default locale — mirrors the
  * backend's `HasTranslations::translate()` (see docs/i18n.md).
  */
-export function resolveTranslation(
-  value: TranslatableText,
-  locale: Locale
-): string {
+export function resolveTranslation(value: TranslatableText, locale: Locale): string {
   return value[locale] || value[defaultLocale] || "";
 }

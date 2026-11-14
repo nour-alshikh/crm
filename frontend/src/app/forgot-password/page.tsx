@@ -7,10 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { applyServerErrors } from "@/lib/form-errors";
-import {
-  forgotPasswordSchema,
-  type ForgotPasswordPayload,
-} from "@/lib/schemas";
+import { forgotPasswordSchema, type ForgotPasswordPayload } from "@/lib/schemas";
 import {
   Form,
   FormControl,
@@ -32,13 +29,10 @@ export default function ForgotPasswordPage() {
 
   async function onSubmit(values: ForgotPasswordPayload) {
     try {
-      const data = await apiFetch<{ message: string }>(
-        "/api/forgot-password",
-        {
-          method: "POST",
-          body: JSON.stringify(values),
-        }
-      );
+      const data = await apiFetch<{ message: string }>("/api/forgot-password", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
       setMessage(data.message);
     } catch (err) {
       const message = applyServerErrors(form, err, ["email"]);
@@ -51,7 +45,7 @@ export default function ForgotPasswordPage() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-sm flex flex-col gap-4"
+          className="flex w-full max-w-sm flex-col gap-4"
         >
           <h1 className="text-xl font-semibold">Forgot password</h1>
 
@@ -79,7 +73,7 @@ export default function ForgotPasswordPage() {
             </>
           )}
 
-          <p className="text-sm text-center">
+          <p className="text-center text-sm">
             <Link href="/login" className="underline">
               Back to log in
             </Link>

@@ -47,10 +47,7 @@ function ResetPasswordForm() {
       });
       router.push("/login");
     } catch (err) {
-      const message = applyServerErrors(form, err, [
-        "password",
-        "password_confirmation",
-      ]);
+      const message = applyServerErrors(form, err, ["password", "password_confirmation"]);
       if (message) toast.error(message);
     }
   }
@@ -69,10 +66,7 @@ function ResetPasswordForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-sm flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full max-w-sm flex-col gap-4">
         <h1 className="text-xl font-semibold">Reset password</h1>
         <p className="text-sm text-muted-foreground">{email}</p>
 

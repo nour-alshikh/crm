@@ -46,7 +46,7 @@ const statusValues = ["draft", "published"] as const;
 const cardLabelClass = (selected: boolean) =>
   cn(
     "flex cursor-pointer items-start gap-3 rounded-lg border border-input p-3 text-sm transition-colors hover:bg-muted",
-    selected && "border-primary bg-primary/5 hover:bg-primary/5"
+    selected && "border-primary bg-primary/5 hover:bg-primary/5",
   );
 
 const defaultValues: PostFormInput = {
@@ -75,13 +75,7 @@ function valuesFromPost(post: Post): PostFormInput {
   };
 }
 
-export function PostForm({
-  post,
-  onSuccess,
-}: {
-  post?: Post;
-  onSuccess?: () => void;
-}) {
+export function PostForm({ post, onSuccess }: { post?: Post; onSuccess?: () => void }) {
   const queryClient = useQueryClient();
   const { t } = useI18n();
 
@@ -189,10 +183,7 @@ export function PostForm({
                   className="grid grid-cols-2 gap-3"
                 >
                   {statusValues.map((value) => (
-                    <label
-                      key={value}
-                      className={cardLabelClass(field.value === value)}
-                    >
+                    <label key={value} className={cardLabelClass(field.value === value)}>
                       <RadioGroupItem value={value} className="mt-0.5" />
                       <span className="flex flex-col">
                         <span className="font-medium">{t(`posts.status.${value}`)}</span>
@@ -314,9 +305,7 @@ export function PostForm({
                   max={5}
                   step={1}
                   value={[field.value as number]}
-                  onValueChange={(value) =>
-                    field.onChange(Array.isArray(value) ? value[0] : value)
-                  }
+                  onValueChange={(value) => field.onChange(Array.isArray(value) ? value[0] : value)}
                 />
               </FormControl>
               <FormMessage />

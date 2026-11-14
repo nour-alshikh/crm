@@ -23,9 +23,7 @@ type FormFieldContextValue<
   name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
-);
+const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
 
 function FormField<
   TFieldValues extends FieldValues = FieldValues,
@@ -42,9 +40,7 @@ type FormItemContextValue = {
   id: string;
 };
 
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
-);
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
 function useFormField() {
   const fieldContext = React.useContext(FormFieldContext);
@@ -74,19 +70,12 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div
-        data-slot="form-item"
-        className={cn("grid gap-1.5", className)}
-        {...props}
-      />
+      <div data-slot="form-item" className={cn("grid gap-1.5", className)} {...props} />
     </FormItemContext.Provider>
   );
 }
 
-function FormLabel({
-  className,
-  ...props
-}: React.ComponentProps<typeof Label>) {
+function FormLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
   const { error, formItemId } = useFormField();
 
   return (
@@ -107,19 +96,12 @@ function FormLabel({
 // doesn't need one. Every one of those controls forwards unknown props
 // (including id/aria-*) to its underlying DOM element, so the child's own
 // prop type doesn't need to name them.
-function FormControl({
-  children,
-}: {
-  children: React.ReactElement<Record<string, unknown>>;
-}) {
-  const { error, formItemId, formDescriptionId, formMessageId } =
-    useFormField();
+function FormControl({ children }: { children: React.ReactElement<Record<string, unknown>> }) {
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
   return React.cloneElement(children, {
     id: formItemId,
-    "aria-describedby": !error
-      ? formDescriptionId
-      : `${formDescriptionId} ${formMessageId}`,
+    "aria-describedby": !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`,
     "aria-invalid": !!error,
   });
 }
@@ -134,7 +116,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={cn("text-sm text-destructive", className)}
       {...props}
     >
       {body}
@@ -142,12 +124,4 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-export {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  useFormField,
-};
+export { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, useFormField };

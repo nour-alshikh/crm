@@ -57,18 +57,14 @@ export function SiteHeader() {
                 </DropdownMenuItem>
 
                 {can("manage-users") && (
-                  <DropdownMenuItem
-                    onClick={() => router.push("/admin/users")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/admin/users")}>
                     {t("nav.manageUsers")}
                   </DropdownMenuItem>
                 )}
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={handleLogout}>
-                  {t("nav.logout")}
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>{t("nav.logout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (

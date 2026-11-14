@@ -47,15 +47,12 @@ export default function PostsPage() {
   useEffect(() => {
     if (!postsError) return;
 
-    toast.error(
-      postsError instanceof ApiError ? postsError.message : t("posts.loadError")
-    );
+    toast.error(postsError instanceof ApiError ? postsError.message : t("posts.loadError"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postsError]);
 
   const deleteMutation = useMutation({
-    mutationFn: (post: Post) =>
-      apiFetch<void>(`/api/posts/${post.id}`, { method: "DELETE" }),
+    mutationFn: (post: Post) => apiFetch<void>(`/api/posts/${post.id}`, { method: "DELETE" }),
     onSuccess: (_data, post) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success(t("posts.deleted"));

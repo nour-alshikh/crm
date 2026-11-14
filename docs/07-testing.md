@@ -50,6 +50,13 @@ Backend line coverage ≥ 80% overall, **100% of Policies, Visibility, Actions**
 | Vitest + Testing Library + MSW | utilities (`format`, money, table URL params), hooks with mocked API, components with logic (StatusPill mapping, Kanban reorder, LostReasonDialog flow, applyServerErrors) |
 | Playwright | E2E against real Laravel (Sail in CI) seeded with `E2ESeeder` |
 
+**As built (0.4):**
+- Scripts: `typecheck` (tsc), `lint` (ESLint), `format` / `format:check` (Prettier 3, `printWidth` 100, Tailwind class sorting via `prettier-plugin-tailwindcss` with `cn`/`cva`), `test` / `test:watch` (Vitest 5 + jsdom), `e2e` (Playwright, chromium).
+- Vitest: `vitest.config.mts` + `vitest.setup.ts` (jest-dom matchers, RTL cleanup, MSW server, cookie/localStorage reset). MSW is strict: an unhandled request fails the test (`onUnhandledFrame: "error"`, the MSW 3 name). Register handlers per test with `server.use(...)` and `apiUrl()` from `src/test/msw-server.ts`. Tests live next to code as `*.test.ts(x)` under `src/`.
+- No `@vitejs/plugin-react`: Vite compiles TSX itself (ADR-030).
+- Tests for react-hook-form state must read `formState.errors` inside the hook, like real forms do, or RHF won't re-render.
+- Playwright: `playwright.config.ts`, specs in `e2e/`. Locally it reuses `npm run dev`; with `CI` set it runs the production build. `e2e/auth.spec.ts` (guest redirect, login, wrong credentials) is skipped in CI until 0.6 sets `E2E_BACKEND=1`. `expect` timeout is 30 s because local Docker sits on an HDD.
+
 ### Playwright critical flows (must stay green)
 1. **Login** (ar + en) → dashboard shows; logout.
 2. **Create lead** manually → duplicate warning appears for existing phone → save → appears in list with correct owner (round-robin).

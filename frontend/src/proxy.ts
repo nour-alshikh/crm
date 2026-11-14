@@ -5,8 +5,7 @@ import type { NextRequest } from "next/server";
 // it can't tell "logged in" from "just visited the site". AuthController
 // queues this separate marker cookie only on login/register and clears it
 // on logout, so that's what actually reflects auth state here.
-const AUTH_STATUS_COOKIE =
-  process.env.NEXT_PUBLIC_AUTH_STATUS_COOKIE ?? "auth_status";
+const AUTH_STATUS_COOKIE = process.env.NEXT_PUBLIC_AUTH_STATUS_COOKIE ?? "auth_status";
 
 const PROTECTED_PATHS = ["/dashboard", "/admin"];
 // Reset links are token-authenticated and independent of the current session,
@@ -19,10 +18,10 @@ export function proxy(request: NextRequest) {
   const hasSession = request.cookies.has(AUTH_STATUS_COOKIE);
 
   const isProtected = PROTECTED_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
   const isGuestOnly = GUEST_ONLY_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 
   if (isProtected && !hasSession) {
@@ -39,11 +38,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/admin/:path*",
-    "/login",
-    "/register",
-    "/forgot-password",
-  ],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/register", "/forgot-password"],
 };
