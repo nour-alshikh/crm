@@ -7,6 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "dedoc/scramble": "^0.13.53",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.4",
         "laravel/tinker": "^3.1",
@@ -23,8 +24,7 @@
         "nunomaduro/collision": "^8.9",
         "pestphp/pest": "^5.3",
         "pestphp/pest-plugin-laravel": "^5.0",
-        "phpunit/phpunit": "^13.3",
-        "spatie/laravel-typescript-transformer": "^3.3"
+        "phpunit/phpunit": "^13.3"
     },
     "conflict": {
         "brianium/paratest": ">=7.28.0"
@@ -76,8 +76,8 @@
             "@analyse",
             "@test"
         ],
-        "types": [
-            "@php artisan typescript:transform"
+        "api:spec": [
+            "@php artisan scramble:export --path=openapi.json"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -121,6 +121,7 @@
         "format": "Fix code style (Pint).",
         "analyse": "Static analysis (Larastan level 6, baseline in phpstan-baseline.neon).",
         "test": "Run the Pest suite on the MySQL `testing` database.",
-        "check": "lint + analyse + test — must pass before every PR."
+        "check": "lint + analyse + test — must pass before every PR.",
+        "api:spec": "Export the OpenAPI spec to backend/openapi.json (then run `npm run api:types` in frontend/ and commit both)."
     }
 }

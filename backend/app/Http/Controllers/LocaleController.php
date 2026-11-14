@@ -9,11 +9,15 @@ use App\Http\Resources\UserResource;
 
 class LocaleController extends Controller
 {
-    public function update(UpdateLocaleRequest $request)
+    /**
+     * Save the signed-in user's UI language; returns the updated user.
+     */
+    public function update(UpdateLocaleRequest $request): UserResource
     {
         $user = $request->user();
+
         $user->update(['locale' => $request->validated('locale')]);
 
-        return response()->json(['user' => new UserResource($user)]);
+        return new UserResource($user);
     }
 }

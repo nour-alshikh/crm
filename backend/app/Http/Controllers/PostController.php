@@ -8,35 +8,33 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        return response()->json([
-            'posts' => PostResource::collection(
-                Post::with('user:id,name')->latest()->get()
-            ),
-        ]);
+        return PostResource::collection(Post::with('user:id,name')->latest()->get());
     }
 
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): PostResource
     {
         $post = $request->user()->posts()->create($request->validated());
         $post->setRelation('user', $request->user());
 
-        return response()->json(['post' => new PostResource($post)], 201);
+        return new PostResource($post);
     }
 
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): PostResource
     {
         $post->update($request->validated());
         $post->loadMissing('user:id,name');
 
-        return response()->json(['post' => new PostResource($post)]);
+        return new PostResource($post);
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): Response
     {
         $post->delete();
 
