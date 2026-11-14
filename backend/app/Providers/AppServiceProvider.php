@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\User;
+use App\OpenApi\ErrorEnvelope;
+use Dedoc\Scramble\Scramble;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -46,5 +48,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->hasRole('admin') ? true : null;
         });
+
+        // API docs (/docs/api, /docs/api.json): Scramble lets `local` through on
+        // its own; staging is open to anyone who can reach it; production only
+        // to admins (via the Gate::before bypass above). docs/03-api.md.
+        Gate::define('viewApiDocs', fn (?User $user = null): bool => app()->environment('staging'));
+
+        Scramble::configure()->withDocumentTransformers(ErrorEnvelope::class);
     }
 }
