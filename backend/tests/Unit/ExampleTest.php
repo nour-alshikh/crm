@@ -1,16 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-
-class ExampleTest extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_that_true_is_true(): void
-    {
-        $this->assertTrue(true);
-    }
-}
+// Placeholder so the Unit suite exists; real unit tests (Actions/Services)
+// arrive with the first modules. Delete once tests/Unit has a real test.
+it('has a working unit suite', function () {
+    expect(true)->toBeTrue();
+});

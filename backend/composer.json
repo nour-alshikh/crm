@@ -15,11 +15,14 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.14",
         "laravel/pail": "^1.3",
         "laravel/pint": "^1.32",
         "laravel/sail": "^1.70",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9",
+        "pestphp/pest": "^5.3",
+        "pestphp/pest-plugin-laravel": "^5.0",
         "phpunit/phpunit": "^13.3",
         "spatie/laravel-typescript-transformer": "^3.3"
     },
@@ -52,9 +55,23 @@
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#c4b5fd,#fb7185\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" --names=queue,logs --kill-others"
         ],
+        "lint": [
+            "@php vendor/bin/pint --test"
+        ],
+        "format": [
+            "@php vendor/bin/pint"
+        ],
+        "analyse": [
+            "@php vendor/bin/phpstan analyse --memory-limit=1G"
+        ],
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
         ],
         "types": [
             "@php artisan typescript:transform"
@@ -96,6 +113,11 @@
     "prefer-stable": true,
     "scripts-descriptions": {
         "dev": "Native (no Docker): API server on :8000 + queue worker + log tail.",
-        "workers": "Under Sail (the container already serves HTTP): queue worker + log tail. Run: ./sail composer workers"
+        "workers": "Under Sail (the container already serves HTTP): queue worker + log tail. Run: ./sail composer workers",
+        "lint": "Check code style (Pint, no changes).",
+        "format": "Fix code style (Pint).",
+        "analyse": "Static analysis (Larastan level 6, baseline in phpstan-baseline.neon).",
+        "test": "Run the Pest suite on the MySQL `testing` database.",
+        "check": "lint + analyse + test — must pass before every PR."
     }
 }
