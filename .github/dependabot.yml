@@ -18,6 +18,13 @@ updates:
       interval: weekly
       day: sunday
     open-pull-requests-limit: 5
+    ignore:
+      # Tracks the Node runtime (CI/production run Node 22); bump with Node itself.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 fails our typecheck; to be done as a dedicated upgrade (ADR-030).
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     groups:
       frontend-minor-and-patch:
         update-types: [minor, patch]
