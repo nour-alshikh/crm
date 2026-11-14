@@ -91,3 +91,11 @@ jobs:
 ```
 
 Branch protection on `main`: all jobs green + up-to-date branch. Nightly workflow: full Playwright (chromium + webkit), `composer outdated`, backup restore test on staging (Phase 5).
+
+**As built (0.6), `.github/workflows/ci.yml`:**
+- **Backend:** PHP 8.4 + MySQL 8.4 + Redis 7 services → `composer install` (cached) → Pint `--test` → Larastan (GitHub annotations) → `php artisan test --parallel --coverage --min=40` → `composer audit --no-dev`. The coverage minimum is a **ratchet** (currently ~42%), not yet the 80% target (ADR-031).
+- **Frontend:** Node 22 → `npm ci` (cached) → typecheck → lint → `format:check` → Vitest → `next build` → `npm audit` (informational).
+- **E2E** (after both): MySQL/Redis services, API via `php artisan serve` on the runner (migrated + seeded), Playwright chromium against the production build (`E2E_BACKEND=1`). Report and API log are uploaded on failure.
+- Not yet: the OpenAPI schema drift check (arrives with 0.7) and the nightly workflow (Phase 5).
+- Dependabot (`.github/dependabot.yml`): weekly grouped minor/patch PRs for composer and npm; monthly for GitHub Actions.
+- Branch protection on `main`: required checks Backend, Frontend and E2E; the branch must be up to date; no force-pushes or deletion.
