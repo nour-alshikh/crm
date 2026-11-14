@@ -92,6 +92,13 @@ jobs:
       - name: Security audit (Composer)
         run: composer audit --no-dev
 
+      # Fails when routes/requests/resources changed without re-exporting the
+      # spec. Fix locally: ./sail composer api:spec && (cd ../frontend && npm run api:types)
+      - name: OpenAPI spec is up to date
+        run: |
+          php artisan scramble:export --path=openapi.json
+          git diff --exit-code -- openapi.json
+
   frontend:
     name: Frontend
     runs-on: ubuntu-24.04
@@ -110,6 +117,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Generated API types match the spec
+        run: |
+          npm run api:types
+          git diff --exit-code -- src/lib/api/schema.d.ts
 
       - name: Type check
         run: npm run typecheck
