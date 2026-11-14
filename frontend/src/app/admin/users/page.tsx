@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/auth-context";
-import { apiFetch, ApiError } from "@/lib/api";
+import { api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/errors";
 import type { AdminUser } from "@/types/admin";
 import {
   Table,
@@ -34,7 +35,7 @@ export default function AdminUsersPage() {
     error: usersError,
   } = useQuery({
     queryKey: ["admin", "users"],
-    queryFn: () => apiFetch<{ users: AdminUser[] }>("/api/admin/users").then((data) => data.users),
+    queryFn: () => api.GET("/admin/users").then(({ data }): AdminUser[] => data?.data ?? []),
     // The permission check above is only a UX shortcut; the API is the real
     // authority, so don't even fetch until we know the check passed — and a
     // 403 back from the API itself is still handled below regardless.

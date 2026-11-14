@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api";
+import { api } from "@/lib/api/client";
 import { applyServerErrors } from "@/lib/form-errors";
 import {
   resetPasswordFormSchema,
@@ -37,13 +37,8 @@ function ResetPasswordForm() {
 
   async function onSubmit(values: ResetPasswordFormValues) {
     try {
-      await apiFetch<{ message: string }>("/api/reset-password", {
-        method: "POST",
-        body: JSON.stringify({
-          ...values,
-          token,
-          email,
-        } satisfies ResetPasswordPayload),
+      await api.POST("/auth/reset-password", {
+        body: { ...values, token, email } satisfies ResetPasswordPayload,
       });
       router.push("/login");
     } catch (err) {

@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { useForm } from "react-hook-form";
 import { describe, expect, it } from "vitest";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api/errors";
 import { applyServerErrors } from "@/lib/form-errors";
 
 type ResetForm = { password: string; password_confirmation: string };
@@ -20,7 +20,7 @@ function setup() {
 describe("applyServerErrors", () => {
   it("attaches each 422 field error to its form field (first message wins)", () => {
     const form = setup();
-    const error = new ApiError(422, "The given data was invalid.", {
+    const error = new ApiError(422, "The given data was invalid.", "validation_failed", {
       password: ["Too short.", "Needs a number."],
       password_confirmation: ["Does not match."],
     });
@@ -40,7 +40,7 @@ describe("applyServerErrors", () => {
 
   it("folds errors for fields the form does not render into the returned message", () => {
     const form = setup();
-    const error = new ApiError(422, "Invalid.", {
+    const error = new ApiError(422, "Invalid.", "validation_failed", {
       email: ["This password reset token is invalid."],
       password: ["Too short."],
     });
@@ -57,7 +57,10 @@ describe("applyServerErrors", () => {
 
   it("joins several unmapped messages", () => {
     const form = setup();
-    const error = new ApiError(422, "Invalid.", { email: ["A."], token: ["B."] });
+    const error = new ApiError(422, "Invalid.", "validation_failed", {
+      email: ["A."],
+      token: ["B."],
+    });
 
     expect(applyServerErrors(form.current, error, ["password"])).toBe("A. B.");
   });
@@ -66,7 +69,9 @@ describe("applyServerErrors", () => {
     const form = setup();
 
     expect(
-      applyServerErrors(form.current, new ApiError(429, "Too many requests."), ["password"]),
+      applyServerErrors(form.current, new ApiError(429, "Too many requests.", "rate_limited"), [
+        "password",
+      ]),
     ).toBe("Too many requests.");
     expect(form.current.formState.errors).toEqual({});
   });

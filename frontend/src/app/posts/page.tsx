@@ -7,7 +7,8 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/auth-context";
 import { useI18n } from "@/contexts/i18n-context";
 import { resolveTranslation } from "@/lib/i18n/resolve";
-import { apiFetch, ApiError } from "@/lib/api";
+import { api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/errors";
 import type { Post } from "@/types/post";
 import { PostForm } from "@/components/post-form";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,8 @@ export default function PostsPage() {
     error: postsError,
   } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => apiFetch<{ posts: Post[] }>("/api/posts").then((d) => d.posts),
+    // Without ?lang= the API returns titles as { en, ar } — see types/post.ts.
+    queryFn: () => api.GET("/posts").then(({ data }) => (data?.data ?? []) as Post[]),
     enabled: !isAuthLoading && !!user,
   });
 
@@ -52,7 +54,8 @@ export default function PostsPage() {
   }, [postsError]);
 
   const deleteMutation = useMutation({
-    mutationFn: (post: Post) => apiFetch<void>(`/api/posts/${post.id}`, { method: "DELETE" }),
+    mutationFn: (post: Post) =>
+      api.DELETE("/posts/{post}", { params: { path: { post: post.id } } }),
     onSuccess: (_data, post) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success(t("posts.deleted"));

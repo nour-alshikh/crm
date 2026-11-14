@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Locale } from "@/types/generated";
+import type { Locale } from "@/types/locale";
 import {
   locales as allLocales,
   localeMeta,

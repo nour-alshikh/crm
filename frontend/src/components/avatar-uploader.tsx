@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/auth-context";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api/errors";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
 

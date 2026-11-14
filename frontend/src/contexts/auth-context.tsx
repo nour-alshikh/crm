@@ -2,15 +2,15 @@
 
 import { createContext, useCallback, useContext, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiFetch, ApiError } from "@/lib/api";
-import type { LoginPayload, RegisterPayload } from "@/lib/schemas";
+import { api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/errors";
+import type { LoginPayload } from "@/lib/schemas";
 import type { User } from "@/types/auth";
 
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
   can: (permission: string) => boolean;
   hasRole: (role: string) => boolean;
@@ -36,12 +36,12 @@ async function fetchCurrentUser(): Promise<User | null> {
   }
 
   try {
-    const data = await apiFetch<{ user: User }>("/api/user");
-    return data.user;
+    const { data } = await api.GET("/user");
+    return data?.data ?? null;
   } catch (error) {
-    // A 401 just means "not logged in" — that's a valid, successful result
-    // for this query, not a failure to retry.
-    if (error instanceof ApiError && error.status === 401) {
+    // "Not logged in" is a valid, successful result for this query, not a
+    // failure to retry.
+    if (error instanceof ApiError && error.code === "unauthenticated") {
       return null;
     }
 
@@ -64,46 +64,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const loginMutation = useMutation({
-    mutationFn: (payload: LoginPayload) =>
-      apiFetch<{ user: User }>("/api/login", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      }),
-    onSuccess: (data) => setUser(data.user),
-  });
-
-  const registerMutation = useMutation({
-    mutationFn: (payload: RegisterPayload) =>
-      apiFetch<{ user: User }>("/api/register", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      }),
-    onSuccess: (data) => setUser(data.user),
+    mutationFn: (payload: LoginPayload) => api.POST("/auth/login", { body: payload }),
+    onSuccess: ({ data }) => setUser(data?.data ?? null),
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => apiFetch<void>("/api/logout", { method: "POST" }),
+    mutationFn: () => api.POST("/auth/logout"),
     onSuccess: () => setUser(null),
   });
 
   const uploadAvatarMutation = useMutation({
-    mutationFn: (file: File) => {
-      const formData = new FormData();
-      formData.append("avatar", file);
-
-      return apiFetch<{ avatar_url: string }>("/api/user/avatar", {
-        method: "POST",
-        body: formData,
-      });
-    },
-    onSuccess: (data) =>
-      queryClient.setQueryData<User | null>(USER_QUERY_KEY, (prev) =>
-        prev ? { ...prev, avatar_url: data.avatar_url } : prev,
-      ),
+    mutationFn: (file: File) =>
+      api.POST("/user/avatar", {
+        // The spec types binary fields as string; the real payload is the File,
+        // sent as multipart (openapi-fetch leaves FormData untouched).
+        body: { avatar: file as unknown as string },
+        bodySerializer: () => {
+          const formData = new FormData();
+          formData.append("avatar", file);
+          return formData;
+        },
+      }),
+    onSuccess: ({ data }) => setUser(data?.data ?? null),
   });
 
   const removeAvatarMutation = useMutation({
-    mutationFn: () => apiFetch<void>("/api/user/avatar", { method: "DELETE" }),
+    mutationFn: () => api.DELETE("/user/avatar"),
     onSuccess: () =>
       queryClient.setQueryData<User | null>(USER_QUERY_KEY, (prev) =>
         prev ? { ...prev, avatar_url: null } : prev,
@@ -115,13 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await loginMutation.mutateAsync(payload);
     },
     [loginMutation],
-  );
-
-  const register = useCallback(
-    async (payload: RegisterPayload) => {
-      await registerMutation.mutateAsync(payload);
-    },
-    [registerMutation],
   );
 
   const logout = useCallback(async () => {
@@ -152,7 +131,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         login,
-        register,
         logout,
         can,
         hasRole,

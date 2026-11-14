@@ -1,4 +1,4 @@
-import type { Locale } from "@/types/generated";
+import type { Locale } from "@/types/locale";
 
 export const locales = ["en", "ar"] as const satisfies readonly Locale[];
 
