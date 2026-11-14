@@ -92,7 +92,8 @@ npm run dev
 
 `./sail` is a small wrapper at `backend/sail`. On Linux/macOS/WSL it calls
 `vendor/bin/sail`. In Git Bash on Windows, where the vendor script refuses to
-run, it calls `docker compose` instead. Useful commands: `./sail ps`,
+run, it calls `docker compose` instead. Before every PR: `./sail composer check` (Pint + Larastan + Pest; `./sail composer format`
+fixes style). Useful commands: `./sail ps`,
 `./sail logs -f`, `./sail test`, `./sail shell`, `./sail mysql`, `./sail down`
 (add `-v` to wipe the DB volume).
 
@@ -103,7 +104,8 @@ Settings → Resources (we use `D:\Docker\wsl-data`).
 
 ### Option B — native PHP (e.g. a second machine on XAMPP/Herd)
 
-Requires PHP ≥ 8.3 once step 0.2 lands (Laravel 13), plus a MySQL-compatible
+Requires PHP ≥ 8.3 to run the app (Laravel 13). **PHP 8.4 is needed to run the
+tests** once Pest 5 lands in step 0.3. You also need a MySQL-compatible
 server. CI runs MySQL 8.4, so that is the reference: MariaDB mostly works, but
 SQL/JSON differences surface there first.
 

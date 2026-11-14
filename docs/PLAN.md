@@ -713,8 +713,8 @@ Calendar sync (Google/M365), click-to-call telephony, email open tracking, publi
 ### Phase 0 — Setup
 - [ ] 0.0 Company kickoff (Meta verification, WA number, domains, VPS, Q1–Q10)
 - [x] 0.1 Local Docker environment (Sail)
-- [ ] 0.2 Upgrade to Laravel 13 & current packages
-- [ ] 0.3 Backend quality tooling (Pest, Larastan, Pint, arch)
+- [x] 0.2 Upgrade to Laravel 13 & current packages
+- [x] 0.3 Backend quality tooling (Pest, Larastan, Pint, arch)
 - [ ] 0.4 Frontend tooling (Vitest, Playwright, lint)
 - [ ] 0.5 Design system foundation (tokens, fonts, playground)
 - [ ] 0.6 CI (GitHub Actions)
