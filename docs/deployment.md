@@ -51,7 +51,7 @@ Both are read at **build time** — redeploy after changing them.
 | `SESSION_SECURE_COOKIE` | `true` | HTTPS only. |
 | `SANCTUM_STATEFUL_DOMAINS` | `my-app.vercel.app` | Sanctum only starts a session for requests whose `Origin`/`Referer` matches. Comma-separate to add more. |
 | `FRONTEND_URLS` | `https://my-app.vercel.app` | First entry builds password-reset links. |
-| `TRUSTED_PROXIES` | `*` | Every request now arrives from a Vercel IP. Without this, per-IP rate limiting puts all users in one bucket. |
+| `TRUSTED_PROXIES` | `*` | Every request now arrives from a Vercel IP. Without this, per-IP rate limiting puts all users in one bucket. Read via `config('app.trusted_proxies')` by `App\Http\Middleware\TrustProxies`, so it survives `config:cache` (before step 0.3 it was read with `env()` in `bootstrap/app.php` and silently ignored once config was cached). |
 
 Then `php artisan config:clear` (or `config:cache`) on the server.
 

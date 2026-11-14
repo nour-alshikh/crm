@@ -39,7 +39,8 @@ Authenticated request
 3. Every subsequent request includes that cookie automatically
    (`credentials: "include"`), so `GET /api/user` returns the current user.
 4. Logout invalidates the Laravel session server-side and clears the cookie.
-5. Login/register also queue a second, plain marker cookie (`auth_status`),
+5. Login/register also queue a second marker cookie (`auth_status`; encrypted
+   like every Laravel cookie, only its presence matters),
    cleared on logout. The Laravel session cookie is set on *every* request
    regardless of auth state, so it can't be used to infer "logged in" —
    `auth_status` is what `proxy.ts` actually checks (see below).
