@@ -83,13 +83,6 @@ function LoginForm() {
             Forgot password?
           </Link>
         </p>
-
-        <p className="text-center text-sm">
-          No account?{" "}
-          <Link href="/register" className="underline">
-            Register
-          </Link>
-        </p>
       </form>
     </Form>
   );

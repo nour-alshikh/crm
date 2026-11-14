@@ -25,15 +25,14 @@ Delete it once the project has a real module to point to instead.
   `app/Http/Resources/PostResource.php` builds through a typed class
   (below) rather than hand-shaping an array.
 - **Backend → frontend type generation** —
-  `app/TypeScript/PostType.php` (+ `PostAuthorType.php`) are
-  `#[TypeScript]`-attributed classes that `PostResource` builds through;
-  `spatie/laravel-typescript-transformer` also scans `app/Enums`, so
-  `PostStatus`/`PostCategory`/`PostTag` come out as TS unions. Run
-  `composer types` (from `backend/`) after changing any of these to
-  regenerate `frontend/src/types/generated.ts`. `frontend/src/types/post.ts`
-  just re-exports from there — the pattern every module's `types/x.ts`
-  should follow instead of hand-declaring fields that can drift from the
-  backend.
+  `PostResource` is a plain `JsonResource`; Scramble infers its shape (and
+  the `PostStatus`/`PostCategory`/`PostTag` enums) into the OpenAPI spec.
+  Run `./sail composer api:spec` (backend) then `npm run api:types`
+  (frontend) after changing resources, requests or routes, and commit
+  `backend/openapi.json` + `frontend/src/lib/api/schema.d.ts`; CI fails if
+  they drift. `frontend/src/types/post.ts` only aliases the generated
+  types, the pattern every module's `types/x.ts` should follow instead of
+  hand-declaring fields that can drift from the backend.
 - **zod schema mirroring the backend's validation rules** —
   `frontend/src/lib/schemas.ts`'s `postSchema`, following the same
   hand-mirroring convention as the auth schemas (see

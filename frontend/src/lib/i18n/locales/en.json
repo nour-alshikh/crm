@@ -4,7 +4,6 @@
   },
   "nav": {
     "login": "Log in",
-    "register": "Register",
     "dashboard": "Dashboard",
     "manageUsers": "Manage users",
     "logout": "Log out",

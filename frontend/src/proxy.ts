@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 // Laravel's session cookie is set on every request, authenticated or not —
 // it can't tell "logged in" from "just visited the site". AuthController
-// queues this separate marker cookie only on login/register and clears it
+// queues this separate marker cookie only on login and clears it
 // on logout, so that's what actually reflects auth state here.
 const AUTH_STATUS_COOKIE = process.env.NEXT_PUBLIC_AUTH_STATUS_COOKIE ?? "auth_status";
 
@@ -11,7 +11,7 @@ const PROTECTED_PATHS = ["/dashboard", "/admin"];
 // Reset links are token-authenticated and independent of the current session,
 // so /reset-password is intentionally not guest-only — a logged-in user should
 // still be able to use a reset link mailed to them.
-const GUEST_ONLY_PATHS = ["/login", "/register", "/forgot-password"];
+const GUEST_ONLY_PATHS = ["/login", "/forgot-password"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,5 +38,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/register", "/forgot-password"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/forgot-password"],
 };

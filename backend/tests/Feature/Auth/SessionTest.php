@@ -10,34 +10,34 @@ beforeEach(function () {
 });
 
 it('returns 401 with the JSON error envelope for /user when logged out', function () {
-    spa()->getJson('/api/user')
+    spa()->getJson('/api/v1/user')
         ->assertUnauthorized()
-        ->assertExactJson(['message' => 'Unauthenticated.']);
+        ->assertExactJson(['message' => __('errors.unauthenticated'), 'code' => 'unauthenticated']);
 });
 
 it('returns the current user with roles and permissions', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
-    spa()->actingAs($admin)->getJson('/api/user')
+    spa()->actingAs($admin)->getJson('/api/v1/user')
         ->assertOk()
-        ->assertJsonStructure(['user' => [
+        ->assertJsonStructure(['data' => [
             'id', 'name', 'email', 'email_verified_at', 'created_at', 'updated_at',
             'roles', 'permissions', 'avatar_url', 'locale',
         ]])
-        ->assertJsonPath('user.id', $admin->id)
-        ->assertJsonPath('user.roles', ['admin'])
-        ->assertJsonPath('user.permissions', ['manage-users']);
+        ->assertJsonPath('data.id', $admin->id)
+        ->assertJsonPath('data.roles', ['admin'])
+        ->assertJsonPath('data.permissions', ['manage-users']);
 });
 
 it('logs out: session ends, marker cookie cleared, /user is 401 again', function () {
     $user = User::factory()->create(['email' => 'rep@example.com']);
     $user->assignRole('user');
 
-    spa()->postJson('/api/login', ['email' => 'rep@example.com', 'password' => 'password'])->assertOk();
-    spa()->getJson('/api/user')->assertOk();
+    spa()->postJson('/api/v1/auth/login', ['email' => 'rep@example.com', 'password' => 'password'])->assertOk();
+    spa()->getJson('/api/v1/user')->assertOk();
 
-    $logout = spa()->postJson('/api/logout')->assertNoContent();
+    $logout = spa()->postJson('/api/v1/auth/logout')->assertNoContent();
 
     // Cookie::forget() queues an already-expired cookie.
     $marker = collect($logout->headers->getCookies())
@@ -49,9 +49,9 @@ it('logs out: session ends, marker cookie cleared, /user is 401 again', function
 
     // The test app caches resolved guards between requests; a browser would not.
     $this->app['auth']->forgetGuards();
-    spa()->getJson('/api/user')->assertUnauthorized();
+    spa()->getJson('/api/v1/user')->assertUnauthorized();
 });
 
 it('requires authentication to log out', function () {
-    spa()->postJson('/api/logout')->assertUnauthorized();
+    spa()->postJson('/api/v1/auth/logout')->assertUnauthorized();
 });

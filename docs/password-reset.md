@@ -6,7 +6,7 @@ no custom token generation, hashing, or expiry logic.
 ## How it works
 
 1. User submits their email on `/forgot-password`. The frontend calls
-   `POST /api/forgot-password`.
+   `POST /api/v1/auth/forgot-password`.
 2. `PasswordResetController::forgotPassword()` calls `Password::sendResetLink()`
    and **always returns the same message**, regardless of whether the email is
    registered — this endpoint can't be used to enumerate accounts.
@@ -20,7 +20,7 @@ no custom token generation, hashing, or expiry logic.
    build that URL, since a Laravel `route('password.reset', ...)` doesn't exist in
    an API-only backend.
 5. The frontend's `/reset-password` page reads `token`/`email` from the query
-   string and calls `POST /api/reset-password` with those plus a new password.
+   string and calls `POST /api/v1/auth/reset-password` with those plus a new password.
 6. `PasswordResetController::resetPassword()` calls `Password::reset()`, which
    validates the token, updates the password (hashed), and invalidates the token
    — reusing it fails with "This password reset token is invalid."
@@ -41,8 +41,8 @@ for how that works separately.
   described above. Reads the frontend origin from `config('cors.allowed_origins')`
   rather than calling `env()` directly, so it still works once config is cached in
   production.
-- `routes/api.php` — `POST /api/forgot-password`, `POST /api/reset-password`, both
-  under the same `throttle:10,1` group as register/login.
+- `routes/api.php` — `POST /api/v1/auth/forgot-password`, `POST /api/v1/auth/reset-password`, both
+  under the same `throttle:10,1` group as login.
 - Uses `config/auth.php`'s existing `passwords.users` broker config (60 minute
   expiry, 60 second resend throttle) and the `password_reset_tokens` table already
   created by the default Laravel migration — nothing to add there.
@@ -53,7 +53,7 @@ for how that works separately.
   message returned by the API.
 - `src/app/reset-password/page.tsx` — reads `token`/`email` from
   `useSearchParams()`, new-password form, redirects to `/login` on success.
-- Both call `apiFetch` directly rather than going through `AuthProvider` — neither
+- Both call the typed API client (`api.POST(...)`) directly rather than going through `AuthProvider` — neither
   action changes the current session/user state, so there's nothing for the auth
   context to update.
 - `src/proxy.ts` — `/forgot-password` is guest-only (redirects away if already
@@ -66,7 +66,7 @@ for how that works separately.
 
 ```bash
 # trigger a reset link
-curl -X POST http://localhost:8000/api/forgot-password -d '{"email":"test@example.com"}' ...
+curl -X POST http://localhost:8000/api/v1/auth/forgot-password -d '{"email":"test@example.com"}' ...
 
 # find the link (MAIL_MAILER=log)
 grep "reset-password?token=" backend/storage/logs/laravel.log

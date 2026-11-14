@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import type { Locale } from "@/types/generated";
-import { apiFetch } from "@/lib/api";
+import type { Locale } from "@/types/locale";
+import { api } from "@/lib/api/client";
 import { useAuth } from "@/contexts/auth-context";
 import { defaultLocale, isLocale, LOCALE_STORAGE_KEY } from "@/lib/i18n/config";
 import en from "@/lib/i18n/locales/en.json";
@@ -59,10 +59,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       window.localStorage.setItem(LOCALE_STORAGE_KEY, next);
 
       if (user) {
-        apiFetch("/api/user/locale", {
-          method: "PATCH",
-          body: JSON.stringify({ locale: next }),
-        }).catch(() => {
+        api.PATCH("/user/locale", { body: { locale: next } }).catch(() => {
           // Best-effort — the UI already switched, and this is just the
           // server-side persisted preference for next login.
         });

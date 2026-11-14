@@ -27,19 +27,20 @@ Authenticated request
 
 1. The frontend calls `GET /sanctum/csrf-cookie` once, which sets an `XSRF-TOKEN`
    cookie. Every non-GET request reads that cookie and sends it back as the
-   `X-XSRF-TOKEN` header (handled in `frontend/src/lib/api.ts`).
+   `X-XSRF-TOKEN` header (handled in `frontend/src/lib/api/client.ts`).
    Since Laravel 13 the check is done by `PreventRequestForgery` (configured in
    `config/sanctum.php`). A request with `Sec-Fetch-Site: same-origin` (the
    rewrite/proxy mode) passes on that header alone. Anything else, including
    direct mode where `localhost:3000` → `:8000` counts as `same-site`, must
    carry the token. Keep sending the token in both modes (ADR-028).
-2. `POST /api/register` / `POST /api/login` authenticate via a normal Laravel
-   session, not a token. The session cookie (`app_session`) is what keeps
+2. `POST /api/v1/auth/login` authenticates via a normal Laravel session, not a
+   token. There is no registration endpoint: this is an internal app, and admins
+   create users. The session cookie (`app_session`) is what keeps
    the user logged in.
 3. Every subsequent request includes that cookie automatically
-   (`credentials: "include"`), so `GET /api/user` returns the current user.
+   (`credentials: "include"`), so `GET /api/v1/user` returns the current user.
 4. Logout invalidates the Laravel session server-side and clears the cookie.
-5. Login/register also queue a second marker cookie (`auth_status`; encrypted
+5. Login also queues a second marker cookie (`auth_status`; encrypted
    like every Laravel cookie, only its presence matters),
    cleared on logout. The Laravel session cookie is set on *every* request
    regardless of auth state, so it can't be used to infer "logged in" —
@@ -56,10 +57,11 @@ matters more once roles are involved.
   (`localhost:3000` by default).
 - `config/cors.php` — `supports_credentials: true`, origins read from `FRONTEND_URLS`.
 - `bootstrap/app.php` — registers Sanctum's `statefulApi()` middleware.
-- `app/Http/Controllers/Auth/AuthController.php` — `register`, `login`, `logout`,
-  `user` endpoints.
-- `routes/api.php` — route definitions, including the `throttle:10,1` guard on
-  register/login.
+- `app/Http/Controllers/Auth/AuthController.php`: `login`, `logout`, `user`
+  endpoints (responses are `{ data: UserResource }`).
+- `routes/api.php`: route definitions, served under `/api/v1`
+  (`apiPrefix` in `bootstrap/app.php`), including the `throttle:10,1` guard on
+  `/auth/*`.
 
 Forgot/reset password is a separate flow built on top of this — see
 [password-reset.md](./password-reset.md).
@@ -81,15 +83,17 @@ the dev server.
 
 ## Frontend (`frontend/`)
 
-- `src/lib/api.ts` — fetch wrapper: ensures the CSRF cookie exists before non-GET
-  requests, attaches `X-XSRF-TOKEN`, always sends `credentials: "include"`.
+- `src/lib/api/client.ts`: typed `openapi-fetch` client (base `/api/v1`). Its
+  middleware ensures the CSRF cookie exists before writes, attaches `X-XSRF-TOKEN`
+  and `Accept-Language`, always sends `credentials: "include"`, and turns non-2xx
+  responses into `ApiError` (see [api-error-handling.md](./api-error-handling.md)).
 - `src/contexts/auth-context.tsx` — `AuthProvider` / `useAuth()`. Hydrates the
-  current user from `GET /api/user` on mount, exposes `login`, `register`, `logout`.
+  current user from `GET /api/v1/user` on mount, exposes `login`, `logout`, avatar upload/remove.
 - `src/proxy.ts` — this Next.js version renamed `middleware.ts` to `proxy.ts`
   (v16+). Redirects based on **`auth_status` cookie presence only** — it can't
   inspect the opaque Laravel session, so it's a UX shortcut, not enforcement.
-  Protects `/dashboard` and `/admin`; keeps `/login` and `/register` guest-only.
-- `src/app/login`, `src/app/register`, `src/app/dashboard` — example pages using
+  Protects `/dashboard` and `/admin`; keeps `/login` and `/forgot-password` guest-only.
+- `src/app/login`, `src/app/dashboard`: example pages using
   `useAuth()`.
 
 Forgot/reset password pages are covered in
@@ -104,19 +108,8 @@ NEXT_PUBLIC_AUTH_STATUS_COOKIE=auth_status   # must match backend AUTH_STATUS_CO
 
 ## Running locally
 
-```bash
-# backend
-cd backend
-php artisan migrate --seed
-php artisan serve --port=8000
-
-# frontend (separate terminal)
-cd frontend
-npm run dev
-```
-
-Visit `http://localhost:3000/register` to create an account, or use the seeded
-`test@example.com` user (role `user`) from `php artisan migrate --seed`.
+See [SETUP.md](../SETUP.md#local-development) (Docker/Sail backend + `npm run dev`).
+Log in with the seeded `test@example.com` / `password` user (role `user`).
 
 ## Beyond this setup
 

@@ -90,6 +90,11 @@ cp .env.example .env.local
 npm run dev
 ```
 
+API changes (routes, FormRequests, Resources): run `./sail composer api:spec`, then
+`npm run api:types` in `frontend/`, and commit `backend/openapi.json` and
+`frontend/src/lib/api/schema.d.ts`; CI fails if they drift. API docs UI:
+http://localhost:8000/docs/api.
+
 Frontend checks (all must pass before a PR): `npm run typecheck && npm run lint &&
 npm run format:check && npm run test && npm run build`. `npm run format` fixes
 formatting. E2E: first run `npx playwright install chromium`, then `npm run e2e`.

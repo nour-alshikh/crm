@@ -72,9 +72,6 @@ export function SiteHeader() {
               <Link href="/login" className="underline">
                 {t("nav.login")}
               </Link>
-              <Link href="/register" className="underline">
-                {t("nav.register")}
-              </Link>
             </div>
           )}
         </div>

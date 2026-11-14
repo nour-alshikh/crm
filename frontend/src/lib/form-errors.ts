@@ -1,5 +1,5 @@
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api/errors";
 
 /**
  * Maps a failed API call's field errors onto the corresponding react-hook-form

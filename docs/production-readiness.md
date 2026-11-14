@@ -13,7 +13,7 @@ are for, and they're a separate, complementary mechanism, not a replacement for
 Spatie's roles/permissions.
 
 > **Core infra vs. example content.** The `Gate::before` admin bypass is reusable —
-> keep it. The `Post` model, `PostPolicy`, and `/api/posts` endpoints are a
+> keep it. The `Post` model, `PostPolicy`, and `/api/v1/posts` endpoints are a
 > **worked example** of the pattern, not required scaffolding: follow the same
 > shape for whatever ownership-checked resource you actually need, then delete
 > `Post` (see [SETUP.md](../SETUP.md#decide-what-to-keep-from-the-example-content)).
@@ -50,8 +50,8 @@ new global `Gate::before` didn't interfere with Spatie's own authorization path.
 ## General API rate limiting
 
 Until now, only register/login/forgot-password/reset-password were throttled
-(`throttle:10,1`). Every other endpoint — `/api/user`, `/api/user/avatar`,
-`/api/admin/users` — had **no rate limit at all**.
+(`throttle:10,1`). Every other endpoint — `/api/v1/user`, `/api/v1/user/avatar`,
+`/api/v1/admin/users` — had **no rate limit at all**.
 
 - `bootstrap/app.php` — `$middleware->throttleApi();` appends a `throttle:api`
   middleware to the entire `api` middleware group, so it applies to every route
@@ -67,8 +67,8 @@ Until now, only register/login/forgot-password/reset-password were throttled
 ### Verified
 
 Confirmed `X-RateLimit-Limit: 60` / `X-RateLimit-Remaining` headers on an
-authenticated request to `/api/user` (no route-specific throttle), and
-`X-RateLimit-Limit: 10` on `/api/login` (the tighter limiter's headers win when
+authenticated request to `/api/v1/user` (no route-specific throttle), and
+`X-RateLimit-Limit: 10` on `/api/v1/auth/login` (the tighter limiter's headers win when
 both layers are active, since it's the innermost/last-executing one).
 
 ## Database: moving off SQLite

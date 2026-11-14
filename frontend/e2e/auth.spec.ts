@@ -34,3 +34,18 @@ test("shows the server error inline for wrong credentials", async ({ page }) => 
   await expect(page.getByText("These credentials do not match our records.")).toBeVisible();
   await expect(page).toHaveURL(/\/login/);
 });
+
+test("logs out from the user menu and loses access to protected pages", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(USER.email);
+  await page.getByLabel("Password").fill(USER.password);
+  await page.getByRole("button", { name: "Log in" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+
+  await page.getByRole("button", { name: USER.name }).click();
+  await page.getByRole("menuitem", { name: "Log out" }).click();
+
+  await expect(page).toHaveURL(/\/login/);
+  await page.goto("/dashboard");
+  await expect(page).toHaveURL(/\/login\?redirect=%2Fdashboard$/);
+});

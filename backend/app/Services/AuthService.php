@@ -5,35 +5,14 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
-    public function register(RegisterRequest $request): User
-    {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $user->assignRole('user');
-
-        Auth::login($user);
-
-        $request->session()->regenerate();
-
-        $this->queueAuthStatusCookie();
-
-        return $user;
-    }
-
     public function login(LoginRequest $request): User
     {
         if (! Auth::attempt($request->only('email', 'password'), true)) {

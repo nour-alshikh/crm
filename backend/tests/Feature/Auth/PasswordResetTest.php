@@ -14,7 +14,7 @@ beforeEach(function () {
 });
 
 it('sends a reset link to a registered email', function () {
-    spa()->postJson('/api/forgot-password', ['email' => 'rep@example.com'])
+    spa()->postJson('/api/v1/auth/forgot-password', ['email' => 'rep@example.com'])
         ->assertOk()
         ->assertJsonStructure(['message']);
 
@@ -22,15 +22,15 @@ it('sends a reset link to a registered email', function () {
 });
 
 it('answers identically for an unknown email and sends nothing (no account enumeration)', function () {
-    $known = spa()->postJson('/api/forgot-password', ['email' => 'rep@example.com'])->assertOk();
-    $unknown = spa()->postJson('/api/forgot-password', ['email' => 'nobody@example.com'])->assertOk();
+    $known = spa()->postJson('/api/v1/auth/forgot-password', ['email' => 'rep@example.com'])->assertOk();
+    $unknown = spa()->postJson('/api/v1/auth/forgot-password', ['email' => 'nobody@example.com'])->assertOk();
 
     expect($unknown->json())->toBe($known->json());
     Notification::assertSentTimes(ResetPassword::class, 1);
 });
 
 it('validates the forgot-password payload', function () {
-    spa()->postJson('/api/forgot-password', ['email' => 'nope'])
+    spa()->postJson('/api/v1/auth/forgot-password', ['email' => 'nope'])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
 });
@@ -38,7 +38,7 @@ it('validates the forgot-password payload', function () {
 it('resets the password with a valid token, and the new password logs in', function () {
     $token = Password::createToken($this->user);
 
-    spa()->postJson('/api/reset-password', [
+    spa()->postJson('/api/v1/auth/reset-password', [
         'token' => $token,
         'email' => 'rep@example.com',
         'password' => 'new-Secret-123',
@@ -47,11 +47,11 @@ it('resets the password with a valid token, and the new password logs in', funct
 
     expect(Hash::check('new-Secret-123', $this->user->fresh()->password))->toBeTrue();
 
-    spa()->postJson('/api/login', ['email' => 'rep@example.com', 'password' => 'new-Secret-123'])->assertOk();
+    spa()->postJson('/api/v1/auth/login', ['email' => 'rep@example.com', 'password' => 'new-Secret-123'])->assertOk();
 });
 
 it('rejects an invalid token without changing the password', function () {
-    spa()->postJson('/api/reset-password', [
+    spa()->postJson('/api/v1/auth/reset-password', [
         'token' => 'not-a-real-token',
         'email' => 'rep@example.com',
         'password' => 'new-Secret-123',
@@ -62,7 +62,7 @@ it('rejects an invalid token without changing the password', function () {
 });
 
 it('validates the reset payload', function () {
-    spa()->postJson('/api/reset-password', [
+    spa()->postJson('/api/v1/auth/reset-password', [
         'email' => 'rep@example.com',
         'password' => 'new-Secret-123',
         'password_confirmation' => 'different',

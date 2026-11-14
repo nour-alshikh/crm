@@ -4,7 +4,7 @@ File uploads via [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-me
 currently wired up for one thing: user avatars.
 
 > **Core infra vs. example content.** `spatie/laravel-medialibrary` itself, the
-> `apiFetch()` `FormData` handling, and the queued-vs-`nonQueued()` conversion
+> the API client's `FormData` handling, and the queued-vs-`nonQueued()` conversion
 > tradeoff are reusable patterns — reuse them for whatever media you actually need.
 > The `avatar` collection, `AvatarController`, and `AvatarUploader` component are a
 > **worked example** built on top of that: keep and rename if you want user avatars,
@@ -33,7 +33,7 @@ on upload instead.
 - `app/Http/Controllers/AvatarController.php` — `store()` (validates `image`, max
   5MB, then `addMediaFromRequest('avatar')->toMediaCollection('avatar')`) and
   `destroy()` (`clearMediaCollection('avatar')`).
-- `routes/api.php` — `POST /api/user/avatar`, `DELETE /api/user/avatar`, both
+- `routes/api.php` — `POST /api/v1/user/avatar`, `DELETE /api/v1/user/avatar`, both
   behind `auth:sanctum`.
 - `app/Http/Controllers/Auth/AuthController.php` — `formatUser()` includes
   `avatar_url` (via `getFirstMediaUrl('avatar', 'thumb')`, or `null`) in every auth
@@ -62,12 +62,12 @@ QUEUE_CONVERSIONS_BY_DEFAULT=true   # irrelevant for the avatar thumb specifical
 
 ## Frontend (`frontend/`)
 
-- `src/lib/api.ts` — `apiFetch()` detects a `FormData` body and skips the
+- `src/lib/api/client.ts`: openapi-fetch passes a `FormData` body through and skips the
   JSON `Content-Type`/serialization it otherwise forces, so the browser can set its
   own multipart boundary. Without this, file uploads would be sent as broken JSON.
 - `src/contexts/auth-context.tsx` — `uploadAvatar(file)` and `removeAvatar()`.
   Both update `avatar_url` in local state directly from the response instead of
-  triggering a full `/api/user` refetch.
+  triggering a full `/api/v1/user` refetch.
 - `src/components/avatar-uploader.tsx` — the actual UI: current avatar (or a
   fallback initial), a hidden file input triggered by a button, a remove button
   (shown only when an avatar exists), and backend validation errors surfaced

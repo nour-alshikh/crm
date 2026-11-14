@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api";
+import { api } from "@/lib/api/client";
 import { applyServerErrors } from "@/lib/form-errors";
 import { forgotPasswordSchema, type ForgotPasswordPayload } from "@/lib/schemas";
 import {
@@ -29,11 +29,8 @@ export default function ForgotPasswordPage() {
 
   async function onSubmit(values: ForgotPasswordPayload) {
     try {
-      const data = await apiFetch<{ message: string }>("/api/forgot-password", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
-      setMessage(data.message);
+      const { data } = await api.POST("/auth/forgot-password", { body: values });
+      setMessage(data?.message ?? null);
     } catch (err) {
       const message = applyServerErrors(form, err, ["email"]);
       if (message) toast.error(message);

@@ -6,38 +6,43 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
     public function __construct(private readonly AuthService $authService) {}
 
-    public function register(RegisterRequest $request)
+    /**
+     * Log in (SPA session).
+     *
+     * Call `GET /sanctum/csrf-cookie` first. Starts a session and sets the
+     * `auth_status` marker cookie the frontend proxy checks.
+     *
+     * @unauthenticated
+     */
+    public function login(LoginRequest $request): UserResource
     {
-        $user = $this->authService->register($request);
-
-        return response()->json(['user' => new UserResource($user)]);
+        return new UserResource($this->authService->login($request));
     }
 
-    public function login(LoginRequest $request)
-    {
-        $user = $this->authService->login($request);
-
-        return response()->json(['user' => new UserResource($user)]);
-    }
-
-    public function logout(Request $request)
+    /**
+     * Log out: ends the session and clears the marker cookie.
+     */
+    public function logout(Request $request): Response
     {
         $this->authService->logout($request);
 
         return response()->noContent();
     }
 
-    public function user(Request $request)
+    /**
+     * The signed-in user, with roles and flattened permissions.
+     */
+    public function user(Request $request): UserResource
     {
-        return response()->json(['user' => new UserResource($request->user())]);
+        return new UserResource($request->user());
     }
 }

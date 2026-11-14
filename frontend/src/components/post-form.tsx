@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api";
+import { api } from "@/lib/api/client";
 import { applyServerErrors } from "@/lib/form-errors";
 import { useI18n } from "@/contexts/i18n-context";
 import {
@@ -96,14 +96,8 @@ export function PostForm({ post, onSuccess }: { post?: Post; onSuccess?: () => v
       const payload = { ...values, published_at: values.published_at || null };
 
       return post
-        ? apiFetch<{ post: Post }>(`/api/posts/${post.id}`, {
-            method: "PUT",
-            body: JSON.stringify(payload),
-          })
-        : apiFetch<{ post: Post }>("/api/posts", {
-            method: "POST",
-            body: JSON.stringify(payload),
-          });
+        ? api.PUT("/posts/{post}", { params: { path: { post: post.id } }, body: payload })
+        : api.POST("/posts", { body: payload });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });

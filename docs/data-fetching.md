@@ -36,28 +36,29 @@ This was the highest-value place to apply it — virtually every page depends on
   useful for an auth check either, so this stays off entirely rather than using
   the default retry-3-times behavior, which would just delay the login page
   showing up.
-- `login`, `register`, `logout`, `uploadAvatar`, `removeAvatar` are each a
+- `login`, `logout`, `uploadAvatar`, `removeAvatar` are each a
   `useMutation`, writing their result straight into the `["auth", "user"]` query
   cache via `queryClient.setQueryData()` on success — no extra round trip to
-  `/api/user` after logging in, since the mutation response already has the
+  `/api/v1/user` after logging in, since the mutation response already has the
   data.
 - **The public API is unchanged.** `useAuth()` still returns
-  `{ user, isLoading, login, register, logout, can, hasRole, uploadAvatar,
-  removeAvatar }`, and `login`/`register`/`logout`/`uploadAvatar`/`removeAvatar`
+  `{ user, isLoading, login, logout, can, hasRole, uploadAvatar,
+  removeAvatar }`, and `login`/`logout`/`uploadAvatar`/`removeAvatar`
   are still plain `async` functions that throw `ApiError` on failure
-  (`mutateAsync` re-throws the mutation's error). Every consumer — login page,
-  register page, dashboard, `AvatarUploader` — needed **zero changes**.
+  (`mutateAsync` re-throws the mutation's error). Every consumer (login page,
+  dashboard, `AvatarUploader`) needed **zero changes**. (Registration was removed
+  in step 0.7.)
 
 ## `AdminUsersPage`: the other converted example
 
 `src/app/admin/users/page.tsx` — the users list was the other clear instance of
-the old pattern (a plain `useEffect` fetching `/api/admin/users` into local
+the old pattern (a plain `useEffect` fetching `/api/v1/admin/users` into local
 state). Now:
 
 ```tsx
 const { data: users = [], isLoading, error } = useQuery({
   queryKey: ["admin", "users"],
-  queryFn: () => apiFetch<{ users: AdminUser[] }>("/api/admin/users").then((d) => d.users),
+  queryFn: () => api.GET("/admin/users").then(({ data }) => data?.data ?? []),
   enabled: !isAuthLoading && isAuthorized,
 });
 ```
@@ -84,7 +85,7 @@ dev mode doesn't.
 ```tsx
 const { data, isLoading, error } = useQuery({
   queryKey: ["something", id],
-  queryFn: () => apiFetch<Something>(`/api/something/${id}`),
+  queryFn: () => api.GET("/things/{thing}", { params: { path: { thing: id } } }),
 });
 ```
 

@@ -718,7 +718,7 @@ Calendar sync (Google/M365), click-to-call telephony, email open tracking, publi
 - [x] 0.4 Frontend tooling (Vitest, Playwright, lint)
 - [ ] 0.5 Design system foundation (tokens, fonts, playground)
 - [x] 0.6 CI (GitHub Actions)
-- [ ] 0.7 API v1, error envelope, Scramble + typed client
+- [x] 0.7 API v1, error envelope, Scramble + typed client
 - [ ] 0.8 Staging server & first deploy
 
 ### Phase 1 — Foundation

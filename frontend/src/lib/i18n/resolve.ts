@@ -1,4 +1,5 @@
-import type { Locale, TranslatableText } from "@/types/generated";
+import type { Locale } from "@/types/locale";
+import type { TranslatableText } from "@/types/post";
 import { defaultLocale } from "./config";
 
 /**
