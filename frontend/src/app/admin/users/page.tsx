@@ -34,10 +34,7 @@ export default function AdminUsersPage() {
     error: usersError,
   } = useQuery({
     queryKey: ["admin", "users"],
-    queryFn: () =>
-      apiFetch<{ users: AdminUser[] }>("/api/admin/users").then(
-        (data) => data.users
-      ),
+    queryFn: () => apiFetch<{ users: AdminUser[] }>("/api/admin/users").then((data) => data.users),
     // The permission check above is only a UX shortcut; the API is the real
     // authority, so don't even fetch until we know the check passed — and a
     // 403 back from the API itself is still handled below regardless.
@@ -47,11 +44,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     if (!usersError) return;
 
-    toast.error(
-      usersError instanceof ApiError
-        ? usersError.message
-        : "Failed to load users."
-    );
+    toast.error(usersError instanceof ApiError ? usersError.message : "Failed to load users.");
   }, [usersError]);
 
   if (isAuthLoading || !user || !isAuthorized) {
@@ -84,9 +77,7 @@ export default function AdminUsersPage() {
               <TableRow key={u.id}>
                 <TableCell>{u.name}</TableCell>
                 <TableCell>{u.email}</TableCell>
-                <TableCell>
-                  {u.roles.map((role) => role.name).join(", ")}
-                </TableCell>
+                <TableCell>{u.roles.map((role) => role.name).join(", ")}</TableCell>
               </TableRow>
             ))}
           </TableBody>

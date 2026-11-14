@@ -43,10 +43,7 @@ function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-sm flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full max-w-sm flex-col gap-4">
         <h1 className="text-xl font-semibold">Log in</h1>
 
         <FormField
@@ -70,11 +67,7 @@ function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  autoComplete="current-password"
-                  {...field}
-                />
+                <Input type="password" autoComplete="current-password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,13 +78,13 @@ function LoginForm() {
           {form.formState.isSubmitting ? "Logging in…" : "Log in"}
         </Button>
 
-        <p className="text-sm text-center">
+        <p className="text-center text-sm">
           <Link href="/forgot-password" className="underline">
             Forgot password?
           </Link>
         </p>
 
-        <p className="text-sm text-center">
+        <p className="text-center text-sm">
           No account?{" "}
           <Link href="/register" className="underline">
             Register

@@ -14,9 +14,7 @@ export class ApiError extends Error {
 }
 
 function readCookie(name: string): string | null {
-  const match = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${name}=`));
+  const match = document.cookie.split("; ").find((row) => row.startsWith(`${name}=`));
 
   return match ? decodeURIComponent(match.split("=").slice(1).join("=")) : null;
 }
@@ -29,10 +27,7 @@ async function ensureCsrfCookie(): Promise<void> {
   });
 }
 
-export async function apiFetch<T>(
-  path: string,
-  options: RequestInit = {}
-): Promise<T> {
+export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const method = (options.method ?? "GET").toUpperCase();
 
   if (method !== "GET" && method !== "HEAD") {
@@ -65,11 +60,7 @@ export async function apiFetch<T>(
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new ApiError(
-      response.status,
-      data?.message ?? "Request failed",
-      data?.errors
-    );
+    throw new ApiError(response.status, data?.message ?? "Request failed", data?.errors);
   }
 
   return data as T;

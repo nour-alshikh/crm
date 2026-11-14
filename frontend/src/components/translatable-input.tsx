@@ -66,7 +66,7 @@ export function TranslatableInput({
                 "-mb-px flex items-center gap-1 border-b-2 px-2 py-1 text-xs font-medium transition-colors",
                 isActive
                   ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
               {localeMeta[locale].label}
@@ -94,9 +94,7 @@ export function TranslatableInput({
             disabled={disabled}
             aria-invalid={!!errors?.[locale]}
           />
-          {errors?.[locale] && (
-            <p className="mt-1 text-xs text-destructive">{errors[locale]}</p>
-          )}
+          {errors?.[locale] && <p className="mt-1 text-xs text-destructive">{errors[locale]}</p>}
         </div>
       ))}
     </div>

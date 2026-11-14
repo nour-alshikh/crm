@@ -65,9 +65,9 @@ describe("applyServerErrors", () => {
   it("returns the API message for non-validation API errors (e.g. 429, 500)", () => {
     const form = setup();
 
-    expect(applyServerErrors(form.current, new ApiError(429, "Too many requests."), ["password"])).toBe(
-      "Too many requests."
-    );
+    expect(
+      applyServerErrors(form.current, new ApiError(429, "Too many requests."), ["password"]),
+    ).toBe("Too many requests.");
     expect(form.current.formState.errors).toEqual({});
   });
 
@@ -75,7 +75,7 @@ describe("applyServerErrors", () => {
     const form = setup();
 
     expect(applyServerErrors(form.current, new TypeError("Failed to fetch"), ["password"])).toBe(
-      "Something went wrong."
+      "Something went wrong.",
     );
   });
 });

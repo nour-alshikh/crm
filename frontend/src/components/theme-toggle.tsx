@@ -28,9 +28,7 @@ export function ThemeToggle() {
   function toggle() {
     const next = isDark ? "light" : "dark";
     const button = buttonRef.current;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (!button || reduceMotion || !document.startViewTransition) {
       setTheme(next);
@@ -59,10 +57,7 @@ export function ThemeToggle() {
     transition.ready.then(() => {
       document.documentElement.animate(
         {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${radius}px at ${x}px ${y}px)`,
-          ],
+          clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`],
         },
         {
           duration: 500,

@@ -10,7 +10,7 @@ describe("apiFetch", () => {
       http.get(apiUrl("/api/user"), ({ request }) => {
         seen = request.headers;
         return HttpResponse.json({ user: { id: 1 } });
-      })
+      }),
     );
 
     await expect(apiFetch("/api/user")).resolves.toEqual({ user: { id: 1 } });
@@ -29,7 +29,7 @@ describe("apiFetch", () => {
       http.post(apiUrl("/api/logout"), ({ request }) => {
         xsrfHeader = request.headers.get("x-xsrf-token");
         return new HttpResponse(null, { status: 204 });
-      })
+      }),
     );
 
     await expect(apiFetch("/api/logout", { method: "POST" })).resolves.toBeUndefined();
@@ -43,12 +43,14 @@ describe("apiFetch", () => {
       http.post(apiUrl("/api/login"), () =>
         HttpResponse.json(
           { message: "These credentials do not match our records.", errors: { email: ["Nope."] } },
-          { status: 422 }
-        )
-      )
+          { status: 422 },
+        ),
+      ),
     );
 
-    const error = await apiFetch("/api/login", { method: "POST", body: "{}" }).catch((e: unknown) => e);
+    const error = await apiFetch("/api/login", { method: "POST", body: "{}" }).catch(
+      (e: unknown) => e,
+    );
 
     expect(error).toBeInstanceOf(ApiError);
     expect(error).toMatchObject({
@@ -59,8 +61,13 @@ describe("apiFetch", () => {
   });
 
   it("uses a generic message when the error body is not JSON", async () => {
-    server.use(http.get(apiUrl("/api/user"), () => new HttpResponse("<html>502</html>", { status: 502 })));
+    server.use(
+      http.get(apiUrl("/api/user"), () => new HttpResponse("<html>502</html>", { status: 502 })),
+    );
 
-    await expect(apiFetch("/api/user")).rejects.toMatchObject({ status: 502, message: "Request failed" });
+    await expect(apiFetch("/api/user")).rejects.toMatchObject({
+      status: 502,
+      message: "Request failed",
+    });
   });
 });

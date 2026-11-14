@@ -22,13 +22,10 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const USER_QUERY_KEY = ["auth", "user"];
 
-const AUTH_STATUS_COOKIE =
-  process.env.NEXT_PUBLIC_AUTH_STATUS_COOKIE ?? "auth_status";
+const AUTH_STATUS_COOKIE = process.env.NEXT_PUBLIC_AUTH_STATUS_COOKIE ?? "auth_status";
 
 function hasAuthStatusCookie(): boolean {
-  return document.cookie
-    .split("; ")
-    .some((entry) => entry.startsWith(`${AUTH_STATUS_COOKIE}=`));
+  return document.cookie.split("; ").some((entry) => entry.startsWith(`${AUTH_STATUS_COOKIE}=`));
 }
 
 async function fetchCurrentUser(): Promise<User | null> {
@@ -63,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const setUser = useCallback(
     (next: User | null) => queryClient.setQueryData<User | null>(USER_QUERY_KEY, next),
-    [queryClient]
+    [queryClient],
   );
 
   const loginMutation = useMutation({
@@ -101,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (data) =>
       queryClient.setQueryData<User | null>(USER_QUERY_KEY, (prev) =>
-        prev ? { ...prev, avatar_url: data.avatar_url } : prev
+        prev ? { ...prev, avatar_url: data.avatar_url } : prev,
       ),
   });
 
@@ -109,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: () => apiFetch<void>("/api/user/avatar", { method: "DELETE" }),
     onSuccess: () =>
       queryClient.setQueryData<User | null>(USER_QUERY_KEY, (prev) =>
-        prev ? { ...prev, avatar_url: null } : prev
+        prev ? { ...prev, avatar_url: null } : prev,
       ),
   });
 
@@ -117,14 +114,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (payload: LoginPayload) => {
       await loginMutation.mutateAsync(payload);
     },
-    [loginMutation]
+    [loginMutation],
   );
 
   const register = useCallback(
     async (payload: RegisterPayload) => {
       await registerMutation.mutateAsync(payload);
     },
-    [registerMutation]
+    [registerMutation],
   );
 
   const logout = useCallback(async () => {
@@ -135,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (file: File) => {
       await uploadAvatarMutation.mutateAsync(file);
     },
-    [uploadAvatarMutation]
+    [uploadAvatarMutation],
   );
 
   const removeAvatar = useCallback(async () => {
@@ -144,13 +141,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const can = useCallback(
     (permission: string) => user?.permissions.includes(permission) ?? false,
-    [user]
+    [user],
   );
 
-  const hasRole = useCallback(
-    (role: string) => user?.roles.includes(role) ?? false,
-    [user]
-  );
+  const hasRole = useCallback((role: string) => user?.roles.includes(role) ?? false, [user]);
 
   return (
     <AuthContext.Provider

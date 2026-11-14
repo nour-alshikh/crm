@@ -20,7 +20,7 @@ import { ApiError } from "@/lib/api";
 export function applyServerErrors<T extends FieldValues>(
   form: UseFormReturn<T>,
   error: unknown,
-  knownFields: readonly Path<T>[]
+  knownFields: readonly Path<T>[],
 ): string | null {
   if (error instanceof ApiError && error.errors) {
     const unmapped: string[] = [];

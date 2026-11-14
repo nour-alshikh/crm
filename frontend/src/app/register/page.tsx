@@ -54,7 +54,7 @@ export default function RegisterPage() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-sm flex flex-col gap-4"
+          className="flex w-full max-w-sm flex-col gap-4"
         >
           <h1 className="text-xl font-semibold">Create an account</h1>
 
@@ -93,11 +93,7 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    autoComplete="new-password"
-                    {...field}
-                  />
+                  <Input type="password" autoComplete="new-password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,11 +107,7 @@ export default function RegisterPage() {
               <FormItem>
                 <FormLabel>Confirm password</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    autoComplete="new-password"
-                    {...field}
-                  />
+                  <Input type="password" autoComplete="new-password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -126,7 +118,7 @@ export default function RegisterPage() {
             {form.formState.isSubmitting ? "Creating account…" : "Register"}
           </Button>
 
-          <p className="text-sm text-center">
+          <p className="text-center text-sm">
             Already have an account?{" "}
             <Link href="/login" className="underline">
               Log in
