@@ -43,7 +43,7 @@ flowchart LR
 ## Repo structure
 
 ```
-/                     CLAUDE.md, README.md, SETUP.md, .github/workflows/, docker-compose.yml (Sail)
+/                     CLAUDE.md, README.md, SETUP.md, .github/workflows/, backend/compose.yaml + backend/sail (Sail)
 backend/              Laravel 13 API
 frontend/             Next.js 16 web app
 mobile/               Expo app (Phase 6)

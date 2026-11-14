@@ -100,6 +100,6 @@ NEXT_PUBLIC_SENTRY_DSN=  SENTRY_AUTH_TOKEN=   # source maps upload at build
 
 ## Local development
 
-- Docker Desktop (WSL2) + **Laravel Sail** (`compose.yaml` at `backend/`): `laravel.test` (PHP 8.4), `mysql` 8.4, `redis`, `mailpit`, plus Reverb + Horizon run inside the app container via `sail artisan reverb:start` / `horizon` (or `composer dev` script using `concurrently`).
+- Docker Desktop (WSL2) + **Laravel Sail** (`compose.yaml` at `backend/`, run via the `backend/sail` wrapper): `laravel.test` (PHP 8.4), `mysql` 8.4, `redis`, `mailpit`. Host ports: API 8000, MySQL 3307, Redis 6379, Mailpit 8025 (ADR-027). Queue worker + log tail via `./sail composer workers`; Reverb + Horizon will run inside the app container via `./sail artisan reverb:start` / `horizon` (Phase 1.13). Full instructions: `SETUP.md`.
 - Frontend runs on host (`npm run dev`) for fast HMR, `NEXT_PUBLIC_API_URL=http://localhost:8000` (existing direct mode) or `BACKEND_URL` proxy mode to mirror prod.
 - `cloudflared` named tunnel for Meta/Postmark webhooks.

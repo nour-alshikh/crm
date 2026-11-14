@@ -51,17 +51,72 @@ whether to rename-and-keep or delete them:
 - Seeded `test@example.com` user in `DatabaseSeeder` — remove once you don't
   need a throwaway dev login.
 
-## Bootstrap
+## Local development
+
+The backend runs in Docker via **Laravel Sail** (`backend/compose.yaml`):
+PHP 8.4, MySQL 8.4, Redis, Mailpit. The frontend runs natively with Node.
+See DECISIONS 027 for why and for the alternatives.
+
+| Service | URL / port on your machine |
+|---|---|
+| API | http://localhost:8000 (`/up` = health check) |
+| Mailpit (caught mail) | http://localhost:8025 |
+| MySQL | `127.0.0.1:3307`, user `sail` / `password`, DBs `crm` + `testing` |
+| Redis | `127.0.0.1:6379` |
+| Frontend | http://localhost:3000 |
+
+The ports are shifted (8000 rather than 80, 3307 rather than 3306) so the stack
+can run while XAMPP's Apache/MySQL are also running.
+
+### Option A — Docker (recommended)
+
+Prerequisites: Docker Desktop (WSL2 backend, hardware virtualization enabled in
+BIOS), Node 22+, Git Bash. A host PHP/Composer is needed only for the very first
+`composer install`; after that everything runs in the container.
 
 ```bash
 cd backend
-composer install
+composer install              # or: docker run --rm -v "$(pwd)":/app -w /app composer install --ignore-platform-reqs
 cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
+./sail up -d                  # first run builds the PHP 8.4 image (several minutes)
+./sail artisan key:generate
+./sail artisan migrate --seed
+./sail artisan storage:link
+./sail composer workers       # queue worker + log tail (leave running in its own terminal)
 
 cd ../frontend
 npm install
 cp .env.example .env.local
+npm run dev
 ```
+
+`./sail` is a small wrapper at `backend/sail`. On Linux/macOS/WSL it calls
+`vendor/bin/sail`. In Git Bash on Windows, where the vendor script refuses to
+run, it calls `docker compose` instead. Useful commands: `./sail ps`,
+`./sail logs -f`, `./sail test`, `./sail shell`, `./sail mysql`, `./sail down`
+(add `-v` to wipe the DB volume).
+
+Windows note: the repo can live on a normal drive (e.g. `D:\Projects\CRM`).
+Bind-mount file access is slower than inside the WSL filesystem, but it's fine
+for this project. Docker Desktop's disk image location is set in
+Settings → Resources (we use `D:\Docker\wsl-data`).
+
+### Option B — native PHP (e.g. a second machine on XAMPP/Herd)
+
+Requires PHP ≥ 8.3 once step 0.2 lands (Laravel 13), plus a MySQL-compatible
+server. CI runs MySQL 8.4, so that is the reference: MariaDB mostly works, but
+SQL/JSON differences surface there first.
+
+1. Create databases `crm` and `testing`.
+2. `cp .env.example .env`, then change: `DB_HOST=127.0.0.1`, `DB_USERNAME=root`,
+   `DB_PASSWORD=` (yours), `REDIS_HOST=127.0.0.1`, `MAIL_HOST=127.0.0.1`.
+   Without Redis, use `QUEUE_CONNECTION=database` and `CACHE_STORE=database`.
+   Without Mailpit, use `MAIL_MAILER=log`.
+3. `composer install && php artisan key:generate && php artisan migrate --seed && php artisan storage:link`
+4. `composer dev` (API on :8000 + queue + logs). Tests use the `testing`
+   database (`phpunit.xml`), so set its credentials via `DB_USERNAME`/`DB_PASSWORD`
+   in `.env`.
+
+Horizon (Phase 1.13) needs `pcntl`, which does not exist on Windows PHP. A
+native Windows machine can run queues with `queue:listen`, but not the Horizon
+dashboard.
