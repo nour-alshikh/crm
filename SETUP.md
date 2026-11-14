@@ -92,7 +92,8 @@ npm run dev
 
 `./sail` is a small wrapper at `backend/sail`. On Linux/macOS/WSL it calls
 `vendor/bin/sail`. In Git Bash on Windows, where the vendor script refuses to
-run, it calls `docker compose` instead. Useful commands: `./sail ps`,
+run, it calls `docker compose` instead. Before every PR: `./sail composer check` (Pint + Larastan + Pest; `./sail composer format`
+fixes style). Useful commands: `./sail ps`,
 `./sail logs -f`, `./sail test`, `./sail shell`, `./sail mysql`, `./sail down`
 (add `-v` to wipe the DB volume).
 

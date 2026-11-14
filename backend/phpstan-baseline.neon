@@ -1,0 +1,211 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Exceptions\\ApiExceptionRenderer\:\:json\(\) has parameter \$extra with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Exceptions/ApiExceptionRenderer.php
+
+		-
+			message: '#^Method App\\Exceptions\\ApiExceptionRenderer\:\:json\(\) has parameter \$headers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Exceptions/ApiExceptionRenderer.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthController\:\:login\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthController\:\:logout\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthController\:\:register\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthController\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\PasswordResetController\:\:forgotPassword\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\PasswordResetController\:\:resetPassword\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AvatarController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AvatarController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\AvatarController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/AvatarController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\LocaleController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/LocaleController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PostController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PostController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PostController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PostController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/PostController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Middleware/SetLocale.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\ForgotPasswordRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/ForgotPasswordRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\LoginRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\RegisterRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/RegisterRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\ResetPasswordRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/ResetPasswordRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Post\\StorePostRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Post/StorePostRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Post\\UpdatePostRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Post/UpdatePostRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\UpdateLocaleRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/UpdateLocaleRequest.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\Admin\\UserResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/Admin/UserResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\PostResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/PostResource.php
+
+		-
+			message: '#^Method App\\Http\\Resources\\UserResource\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Class App\\Models\\Post uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Method App\\Models\\Post\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: '#^Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver\:\:nonQueued\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:posts\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Parameter \#1 \$role of static method App\\TypeScript\\RoleType\:\:fromModel\(\) expects Spatie\\Permission\\Models\\Role, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/TypeScript/AdminUserType.php
+
+		-
+			message: '#^Parameter \#1 \$user of static method App\\TypeScript\\PostAuthorType\:\:fromModel\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/TypeScript/PostType.php
+
+		-
+			message: '#^Cannot call method toJSON\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/TypeScript/UserType.php
+
+		-
+			message: '#^Class Spatie\\MediaLibraryPro\\Models\\TemporaryUpload not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: config/media-library.php

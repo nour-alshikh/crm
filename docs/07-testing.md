@@ -4,7 +4,15 @@ Rule: **no step is done without its tests passing in CI.** Every behavior change
 
 ## Backend (Pest 5)
 
-Setup (step 0.3): convert `tests/` to Pest, `RefreshDatabase` on MySQL (same engine as prod — SQLite hides collation/JSON/fulltext differences), parallel testing (`php artisan test --parallel`), Larastan, Pint.
+Setup (step 0.3): convert `tests/` to Pest, `RefreshDatabase` on MySQL (same engine as prod — SQLite hides collation/JSON/fulltext differences), parallel testing (`php artisan test --parallel`, wired into CI in 0.6), Larastan, Pint.
+
+**As built (0.3):**
+- `composer check` = `lint` (Pint `--test`, Laravel preset + `declare_strict_types`) → `analyse` (Larastan level 6, pre-existing template issues frozen in `phpstan-baseline.neon`, which may only shrink) → `test` (Pest 5 / PHPUnit 13). Run it as `./sail composer check`; `composer format` fixes style.
+- `tests/Pest.php`: Feature tests extend `Tests\TestCase` with `RefreshDatabase` on the MySQL `testing` DB. `spa()` sends the frontend's `Origin`/`Referer` so Sanctum starts a session, as the real SPA does (phpunit.xml pins `SANCTUM_STATEFUL_DOMAINS=localhost:3000`). Unit tests stay framework-free.
+- CSRF is not exercised in tests: Laravel skips `PreventRequestForgery` while running unit tests. The CSRF behaviour is covered by manual/E2E checks (ADR-028).
+- `tests/Arch.php` (own `Arch` testsuite in phpunit.xml): no debug functions, `App`/`Database` use strict types, no `env()` in classes, plus a file scan forbidding `env()` in `bootstrap/` and `routes/`.
+- Current suites: `Feature/Auth` (login ok/fail/validation/throttle, `/user`, logout, password reset incl. no-enumeration), `Feature/Http/TrustedProxiesTest`.
+- Local speed: the first test of a run rebuilds the schema (~30 s on an HDD-backed Docker disk; see ADR-029). After that, tests take ~0.3 s each.
 
 ### Layers
 | Layer | What | Location |
