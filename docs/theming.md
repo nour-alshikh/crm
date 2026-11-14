@@ -32,6 +32,15 @@ the `.dark` class it also defines. This adds the toggle.
   — without that guard, OS dark mode would override an explicit "light"
   choice from the toggle.
 
+## Design tokens (step 0.5)
+
+The palette is the "Tide & Saffron" system in `docs/09-design-system.md`; all
+tokens live in `src/app/globals.css`. Light tokens are on `:root, .light`, dark on
+`.dark`, plus the `prefers-color-scheme` mirror (a Vitest check keeps the mirror
+in sync with `.dark`). Browse them at `/dev/design`. Component colors come from
+`src/lib/design/semantic.ts`, and ESLint rejects hex/`oklch()`/`rgb()`/`hsl()`
+literals in `src/**/*.tsx?`.
+
 ## Adding dark-mode support to a new component
 
 Use the existing semantic tokens (`bg-background`, `text-foreground`,
