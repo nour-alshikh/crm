@@ -75,5 +75,37 @@
   "theme": {
     "light": "فاتح",
     "dark": "داكن"
+  },
+  "status": {
+    "lead": {
+      "new": "جديد",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهَّل",
+      "unqualified": "غير مؤهَّل",
+      "converted": "تم التحويل"
+    },
+    "deal": {
+      "open": "مفتوحة",
+      "won": "رابحة",
+      "lost": "خاسرة"
+    },
+    "task": {
+      "overdue": "متأخرة",
+      "today": "مستحقة اليوم",
+      "upcoming": "قادمة"
+    },
+    "priority": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    }
+  },
+  "source": {
+    "facebook": "فيسبوك",
+    "whatsapp": "واتساب",
+    "email": "البريد الإلكتروني",
+    "website": "الموقع الإلكتروني",
+    "manual": "يدوي",
+    "import": "استيراد"
   }
 }

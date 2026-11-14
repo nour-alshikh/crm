@@ -1,7 +1,20 @@
 # 09 — Design System ("Tide & Saffron")
 
-Status: **approved direction** (deep teal + amber, IBM Plex). Applied to code in
-PLAN step **0.5** (tokens) and **1.6** (app shell). Until then this doc is the spec.
+Status: **tokens, fonts, base components and the core chips are in code** (PLAN
+step 0.5): `frontend/src/app/globals.css`, `src/lib/design/semantic.ts`,
+`src/components/{ui,crm,icons}`, `src/components/dir-icon.tsx`. Living reference:
+`/dev/design` (dev only; it moves to `/[locale]/dev/design` in 1.4). The app shell
+follows in 1.6. This doc stays the spec: change it first, then the code.
+
+Implementation notes (0.5):
+- Light tokens are declared on `:root, .light` and dark on `.dark`, so a nested
+  subtree can switch theme (used by the playground's side-by-side panels).
+- `tint-*` is a Tailwind `@utility`: `tint-success`, `tint-stage-teal`, `tint-primary`, …
+- Arabic line-height is applied by overriding Tailwind's `--text-*--line-height`
+  variables under `:lang(ar)`, so `text-*` utilities get 1.7 and explicit `leading-*` still wins.
+- Plex Sans Arabic loads only its `arabic` subset (Latin glyphs always come from Plex Sans).
+- `semantic.ts` exposes literal class names per tone (`TONE_CLASSES`). Never build
+  `tint-${tone}` dynamically, or Tailwind won't generate the class.
 
 ## 1. Intent
 
@@ -256,9 +269,11 @@ CRM components (`frontend/src/components/crm/`):
 
 | Component | Notes |
 |---|---|
-| `StatusPill` | tint bg + solid text + icon; props: `kind` (lead/deal/task/quote), `value` |
-| `StageChip` | dot + name in current locale; color from stage key |
-| `SourceBadge` | channel glyph + label |
+| `StatusPill` ✅ | tint bg + solid text + icon; props: `kind` (lead/deal/task/priority; quote in Phase 4), `value`, `stage?` (open deal → stage color) |
+| `StageChip` ✅ | dot + name in current locale (`<bdi>`); color from stage key |
+| `SourceBadge` ✅ | channel glyph + label |
+| `DirIcon` ✅ (`components/dir-icon.tsx`) | wraps a directional icon; mirrors in RTL (`rtl:-scale-x-100`) |
+| `FacebookGlyph` / `WhatsAppGlyph` ✅ (`components/icons/`) | monochrome stroke glyphs tinted by `currentColor` (lucide has no brand icons) |
 | `Money` | `amount_minor` + `currency` → `Intl.NumberFormat`, tabular, `dir=ltr` |
 | `PhoneLink` / `EmailLink` / `WhatsAppLink` | E.164 display, `dir=ltr`, click-to-act |
 | `UserAvatar` / `AvatarStack` | existing `user-avatar.tsx` extended; initials fallback works for Arabic names (first letter of first + last word) |

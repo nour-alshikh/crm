@@ -75,5 +75,37 @@
   "theme": {
     "light": "Light",
     "dark": "Dark"
+  },
+  "status": {
+    "lead": {
+      "new": "New",
+      "contacted": "Contacted",
+      "qualified": "Qualified",
+      "unqualified": "Unqualified",
+      "converted": "Converted"
+    },
+    "deal": {
+      "open": "Open",
+      "won": "Won",
+      "lost": "Lost"
+    },
+    "task": {
+      "overdue": "Overdue",
+      "today": "Due today",
+      "upcoming": "Upcoming"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+  "source": {
+    "facebook": "Facebook",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "website": "Website",
+    "manual": "Manual",
+    "import": "Import"
   }
 }

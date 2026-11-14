@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import type { Locale } from "@/types/locale";
 import { api } from "@/lib/api/client";
 import { useAuth } from "@/contexts/auth-context";
-import { defaultLocale, isLocale, LOCALE_STORAGE_KEY } from "@/lib/i18n/config";
+import { defaultLocale, dirFor, isLocale, LOCALE_STORAGE_KEY } from "@/lib/i18n/config";
 import en from "@/lib/i18n/locales/en.json";
 import ar from "@/lib/i18n/locales/ar.json";
 
@@ -13,6 +13,8 @@ const dictionaries: Record<Locale, Dictionary> = { en, ar };
 
 interface I18nContextValue {
   locale: Locale;
+  /** Reading direction of the current locale. */
+  dir: "ltr" | "rtl";
   setLocale: (locale: Locale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
 }
@@ -83,7 +85,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [locale],
   );
 
-  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
+  return (
+    <I18nContext.Provider value={{ locale, dir: dirFor(locale), setLocale, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
 }
 
 export function useI18n(): I18nContextValue {
