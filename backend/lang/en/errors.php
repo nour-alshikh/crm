@@ -13,4 +13,5 @@ return [
     'method_not_allowed' => 'This action is not supported.',
     'http_error' => 'The request could not be completed.',
     'server_error' => 'Something went wrong on our side. Please try again.',
+    'account_inactive' => 'This account has been deactivated. Contact your administrator.',
 ];

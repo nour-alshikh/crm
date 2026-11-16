@@ -15,9 +15,23 @@ class AuthService
 {
     public function login(LoginRequest $request): User
     {
-        if (! Auth::attempt($request->only('email', 'password'), true)) {
+        $inactive = false;
+
+        // The callback runs only once the password has been verified, so the
+        // "deactivated" message never reveals anything to a wrong password.
+        $signedIn = Auth::attemptWhen(
+            $request->only('email', 'password'),
+            function (User $user) use (&$inactive): bool {
+                $inactive = ! $user->is_active;
+
+                return ! $inactive;
+            },
+            true,
+        );
+
+        if (! $signedIn) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => $inactive ? __('errors.account_inactive') : __('auth.failed'),
             ]);
         }
 
@@ -32,8 +46,11 @@ class AuthService
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Bearer-token (mobile) requests carry no session.
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         Cookie::queue(Cookie::forget($this->authStatusCookieName()));
     }

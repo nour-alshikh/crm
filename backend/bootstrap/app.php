@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Exceptions\ApiExceptionRenderer;
+use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\TrustProxies;
 use Illuminate\Foundation\Application;
@@ -32,6 +33,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
         $middleware->throttleApi();
         $middleware->append(SetLocale::class);
+
+        // Signs out deactivated users before auth:sanctum runs on the route.
+        $middleware->api(append: [EnsureUserIsActive::class]);
 
         $middleware->alias([
             'role' => RoleMiddleware::class,
