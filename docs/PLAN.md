@@ -722,7 +722,7 @@ Calendar sync (Google/M365), click-to-call telephony, email open tracking, publi
 - [ ] 0.8 Staging server & first deploy
 
 ### Phase 1 — Foundation
-- [ ] 1.1 Teams & CRM user fields
+- [x] 1.1 Teams & CRM user fields
 - [ ] 1.2 Permission catalogue, roles, /me, can blocks
 - [ ] 1.3 Visibility scope & security test harness
 - [ ] 1.4 next-intl locale routing & SSR dir

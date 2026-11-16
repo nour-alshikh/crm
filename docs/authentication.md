@@ -45,6 +45,14 @@ Authenticated request
    cleared on logout. The Laravel session cookie is set on *every* request
    regardless of auth state, so it can't be used to infer "logged in" —
    `auth_status` is what `proxy.ts` actually checks (see below).
+6. Deactivated users (`users.is_active = false`) can't sign in: with the right
+   password, login answers 422 with `errors.email = errors.account_inactive`
+   ("account deactivated"); with a wrong one, the generic `auth.failed`, so the
+   password check always comes first. A user deactivated mid-session is signed
+   out on their next API request by `EnsureUserIsActive` (api middleware group):
+   session invalidated, `auth_status` cleared, all Sanctum tokens deleted, and
+   authenticated routes answer 401 `unauthenticated`. Public routes still work,
+   so the same browser can sign in as someone else.
 
 The Laravel API is the only thing that actually enforces authentication. A `proxy.ts`
 redirect on the frontend is UX, not a security boundary — see
@@ -58,6 +66,7 @@ matters more once roles are involved.
 - `config/cors.php` — `supports_credentials: true`, origins read from `FRONTEND_URLS`.
 - `bootstrap/app.php` — registers Sanctum's `statefulApi()` middleware.
 - `app/Http/Controllers/Auth/AuthController.php`: `login`, `logout`, `user`
+- `app/Http/Middleware/EnsureUserIsActive.php`: signs out deactivated users (flow step 6)
   endpoints (responses are `{ data: UserResource }`).
 - `routes/api.php`: route definitions, served under `/api/v1`
   (`apiPrefix` in `bootstrap/app.php`), including the `throttle:10,1` guard on

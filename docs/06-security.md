@@ -84,7 +84,7 @@ Every route in `03-api.md` lists its permission/policy. Enforced by:
 - Passwords: Laravel default bcrypt/argon2id, min 10 chars + `Password::uncompromised()`.
 - Login throttle 5/min per email+IP; generic error message.
 - Session: Redis driver, `http_only`, `secure` in prod, `same_site=lax`, regenerated on login, invalidated on logout and on deactivation (delete sessions by user id) and password change (other sessions).
-- Deactivated users: middleware rejects on every request; tokens revoked.
+- Deactivated users: `EnsureUserIsActive` (api group) checks every request: it ends the session, deletes all Sanctum tokens and answers 401 on authenticated routes. Login refuses them with `account_inactive` (only after the password matched). Step 1.9's deactivate action also deletes their rows in `sessions`, so other devices are cut off without waiting for their next request.
 - Optional TOTP 2FA for admins (Phase 5, Laravel Fortify's 2FA actions or `pragmarx/google2fa`).
 - Registration route removed.
 
